@@ -1,2 +1,12 @@
+import io
+import pickle
+
+
 def serialise_dicts(dicts):
-    pass
+    buffer = io.BytesIO()
+
+    pickle.dump(dicts, buffer)
+    buffer.seek(0)
+    serialised_data = buffer.getvalue()
+
+    return serialised_data
