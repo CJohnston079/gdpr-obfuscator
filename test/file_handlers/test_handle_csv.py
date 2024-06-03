@@ -5,16 +5,16 @@ from src.file_handlers.handle_csv import handle_csv
 
 class TestHandleCSV(unittest.TestCase):
     sample_data = [
-        {'name': 'Alice', 'age': '30', 'city': 'York'},
-        {'name': 'Bob', 'age': '25', 'city': 'Leeds'},
-        {'name': 'Charlie', 'age': '21', 'city': 'Sheffield'}
+        {'name': 'George', 'age': '44', 'city': 'York'},
+        {'name': 'Lindsay', 'age': '40', 'city': 'Leeds'},
+        {'name': 'Michael', 'age': '37', 'city': 'Sheffield'}
     ]
 
     sample_csv_content = (
         "name,age,city\n"
-        "Alice,30,York\n"
-        "Bob,25,Leeds\n"
-        "Charlie,21,Sheffield"
+        "George,44,York\n"
+        "Lindsay,40,Leeds\n"
+        "Michael,37,Sheffield"
     )
 
     @patch("builtins.open", mock_open(read_data=sample_csv_content))

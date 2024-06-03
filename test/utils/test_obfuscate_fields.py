@@ -7,15 +7,15 @@ class TestObfuscateFields():
     @pytest.fixture
     def sample_args(self):
         sample_data = [
-            {'name': 'George', 'age': '30', 'city': 'York'},
-            {'name': 'Michael', 'age': '25', 'city': 'Leeds'},
-            {'name': 'Lindsay', 'age': '21', 'city': 'Sheffield'}
+            {'name': 'George', 'age': '44', 'city': 'York'},
+            {'name': 'Michael', 'age': '40', 'city': 'Leeds'},
+            {'name': 'Lindsay', 'age': '37', 'city': 'Sheffield'}
         ]
         sample_fields = ["name"]
         expected_return = [
-            {'name': '***', 'age': '30', 'city': 'York'},
-            {'name': '***', 'age': '25', 'city': 'Leeds'},
-            {'name': '***', 'age': '21', 'city': 'Sheffield'}
+            {'name': '***', 'age': '44', 'city': 'York'},
+            {'name': '***', 'age': '40', 'city': 'Leeds'},
+            {'name': '***', 'age': '37', 'city': 'Sheffield'}
         ]
 
         return sample_data, sample_fields, expected_return
