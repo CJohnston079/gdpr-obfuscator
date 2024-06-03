@@ -1,7 +1,7 @@
 import io
 import pickle
 import pytest
-from src.serialise_dicts import serialise_dicts
+from src.utils.serialise_dicts import serialise_dicts
 
 
 class TestSerialiseDicts:

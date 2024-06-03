@@ -1,4 +1,4 @@
-from src.get_file_type import get_file_type
+from src.utils.get_file_type import get_file_type
 
 
 class TestGetFileType():

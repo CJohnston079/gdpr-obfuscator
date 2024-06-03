@@ -1,15 +1,15 @@
 import copy
 import pytest
-from src.obfuscate_fields import obfuscate_fields
+from src.utils.obfuscate_fields import obfuscate_fields
 
 
 class TestObfuscateFields():
     @pytest.fixture
     def sample_args(self):
         sample_data = [
-            {'name': 'Alice', 'age': '30', 'city': 'York'},
-            {'name': 'Bob', 'age': '25', 'city': 'Leeds'},
-            {'name': 'Charlie', 'age': '21', 'city': 'Sheffield'}
+            {'name': 'George', 'age': '30', 'city': 'York'},
+            {'name': 'Michael', 'age': '25', 'city': 'Leeds'},
+            {'name': 'Lindsay', 'age': '21', 'city': 'Sheffield'}
         ]
         sample_fields = ["name"]
         expected_return = [
