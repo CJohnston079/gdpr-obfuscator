@@ -13,7 +13,9 @@ def obfuscator(event):
     if file_type == 'csv':
         data = handle_csv(file_path)
     else:
-        return
+        raise ValueError(
+            f"File type .{file_type} is not supported."
+        )
 
     obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
     serialized_data = serialise_dicts(obfuscated_data)
