@@ -62,6 +62,26 @@ class TestObfuscator(unittest.TestCase):
             {'name': '***', 'age': '***', 'city': 'Sheffield'}
         ]'''
 
+    @patch("src.obfuscator.get_file_type")
+    def test_obfuscator_handles_unsupported_file_type(
+            self,
+            mock_get_file_type
+    ):
+        mock_get_file_type.return_value = 'txt'
+
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.txt",
+            "pii_fields": ["name", "email_address"]
+        }
+
+        with self.assertRaises(ValueError) as context:
+            obfuscator(event)
+
+        self.assertEqual(
+            str(context.exception),
+            "File type .txt is not supported."
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
