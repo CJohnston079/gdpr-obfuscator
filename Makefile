@@ -51,7 +51,7 @@ run-flake:
 	$(call execute_in_env, flake8  ./src/*.py ./src/*/*.py ./test/*.py ./test/*/*.py)
 
 unit-test:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v)
 
 check-coverage:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} coverage run --omit 'venv/*' -m pytest && coverage report -m)
