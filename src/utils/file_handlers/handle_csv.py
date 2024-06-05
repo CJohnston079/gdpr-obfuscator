@@ -5,19 +5,19 @@ import io
 
 def handle_csv(file_path):
     """
-    Reads the contents of a CSV file and returns a list of dictionaries,
+    Reads the contents of a CSV file from an AWS S3 bucket and returns a list
+    of dictionaries,
 
     Args:
-        csv_file (str): The path to the CSV file to be read.
+        file_path (str): The S3 bucket path to the CSV file to be read. The path
+            should be in the format 's3://bucket_name/path/to/file.csv'.
 
     Returns:
-        list: A list of dictionaries representing the rows in the CSV file.
-              Each dictionary contains key-value pairs where the keys are
-              column headers and the values are the corresponding values
-              from each row in the CSV file.
-
-    Raises:
-        FileNotFoundError: If the specified CSV file cannot be found.
+        list:
+            A list of dictionaries representing the rows in the CSV file.
+            Each dictionary contains key-value pairs where the keys are
+            column headers and the values are the corresponding values
+            from each row in the CSV file.
     """
 
     bucket_name = file_path.split('/')[2]
