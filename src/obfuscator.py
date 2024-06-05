@@ -14,7 +14,7 @@ def obfuscator(event):
         data = handle_csv(file_path)
     else:
         raise ValueError(
-            f"File type .{file_type} is not supported.."
+            f"File type .{file_type} is not supported."
         )
 
     obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
