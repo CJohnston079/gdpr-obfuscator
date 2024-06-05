@@ -1,7 +1,9 @@
 import csv
+import boto3
+import io
 
 
-def handle_csv(csv_file):
+def handle_csv(file_path):
     """
     Reads the contents of a CSV file and returns a list of dictionaries,
 
@@ -18,5 +20,13 @@ def handle_csv(csv_file):
         FileNotFoundError: If the specified CSV file cannot be found.
     """
 
-    with open(csv_file, 'r', newline='') as file:
-        return [dict(row) for row in csv.DictReader(file)]
+    bucket_name = file_path.split('/')[2]
+    key = '/'.join(file_path.split('/')[3:])
+
+    s3 = boto3.client("s3", region_name="eu-west-2")
+
+    response = s3.get_object(Bucket=bucket_name, Key=key)
+    content = response['Body'].read().decode('utf-8')
+    file_content = io.StringIO(content)
+
+    return [dict(row) for row in csv.DictReader(file_content)]
