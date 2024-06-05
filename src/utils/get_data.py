@@ -1,5 +1,5 @@
 from src.utils.get_file_type import get_file_type
-from src.file_handlers.handle_csv import handle_csv
+from src.utils.file_handlers.handle_csv import handle_csv
 
 
 def get_data(file_path):

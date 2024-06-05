@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open
-from src.file_handlers.handle_csv import handle_csv
+from src.utils.file_handlers.handle_csv import handle_csv
 
 
 class TestHandleCSV(unittest.TestCase):
