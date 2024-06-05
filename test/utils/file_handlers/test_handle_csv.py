@@ -43,5 +43,5 @@ class TestHandleCSV(unittest.TestCase):
             handle_csv("non_existent_file.csv")
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

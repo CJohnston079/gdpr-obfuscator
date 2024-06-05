@@ -43,3 +43,7 @@ class TestObfuscateFields():
         result = obfuscate_fields(sample_data, sample_fields)
 
         assert result == expected_return
+
+
+if __name__ == '__main__':  # pragma: no cover
+    unittest.main()
