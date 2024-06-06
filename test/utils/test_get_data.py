@@ -12,7 +12,7 @@ class TestGetData(unittest.TestCase):
             mock_handle_csv
     ):
         mock_get_file_type.return_value = 'csv'
-        result = get_data("s3://bucket/data/file.csv")
+        get_data("s3://bucket/data/file.csv")
         mock_get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
 
     @patch("src.utils.get_data.handle_csv")
@@ -23,7 +23,7 @@ class TestGetData(unittest.TestCase):
             mock_handle_csv
     ):
         mock_get_file_type.return_value = 'csv'
-        result = get_data("s3://bucket/data/file.csv")
+        get_data("s3://bucket/data/file.csv")
         mock_handle_csv.assert_called_once_with("s3://bucket/data/file.csv")
 
     @patch("src.utils.get_data.get_file_type")
