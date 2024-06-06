@@ -4,6 +4,13 @@ from src.utils.get_data import get_data
 
 
 class TestGetData(unittest.TestCase):
+    def setUp(self):
+        self.sample_data = [
+            {'name': 'George', 'age': '44', 'city': 'York'},
+            {'name': 'Lindsay', 'age': '40', 'city': 'Leeds'},
+            {'name': 'Michael', 'age': '37', 'city': 'Sheffield'}
+        ]
+
     @patch("src.utils.get_data.handle_csv")
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_calls_get_file_type(
@@ -36,6 +43,19 @@ class TestGetData(unittest.TestCase):
         mock_get_file_type.return_value = 'json'
         get_data("s3://bucket/data/file.json")
         mock_handle_json.assert_called_once_with("s3://bucket/data/file.json")
+
+    @patch("src.utils.get_data.handle_csv")
+    @patch("src.utils.get_data.get_file_type")
+    def test_get_data_calls_returns_expected_data(
+            self,
+            mock_get_file_type,
+            mock_handle_csv
+    ):
+        mock_get_file_type.return_value = 'csv'
+        mock_handle_csv.return_value = self.sample_data
+        result = get_data("s3://bucket/data/file.csv")
+
+        assert result == self.sample_data
 
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_handles_unsupported_file_type(self, mock_get_file_type):
