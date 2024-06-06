@@ -1,5 +1,6 @@
 from src.utils.get_file_type import get_file_type
 from src.utils.file_handlers.handle_csv import handle_csv
+from src.utils.file_handlers.handle_json import handle_json
 
 
 def get_data(file_path):
@@ -22,7 +23,8 @@ def get_data(file_path):
 
     if file_type == 'csv':
         data = handle_csv(file_path)
-        data = 'poo'
+    elif file_type == 'json':
+        data = handle_json(file_path)
     else:
         raise ValueError(
             f"File type .{file_type} is not supported."
