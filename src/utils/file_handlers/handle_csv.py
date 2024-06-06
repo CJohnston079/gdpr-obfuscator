@@ -6,7 +6,7 @@ import io
 def handle_csv(file_path):
     """
     Reads the contents of a CSV file from an AWS S3 bucket and returns a list
-    of dictionaries,
+    of dictionaries.
 
     Args:
         file_path (str): The S3 bucket path to the CSV file to be read. The path
