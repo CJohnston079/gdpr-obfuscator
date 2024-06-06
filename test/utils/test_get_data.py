@@ -26,6 +26,17 @@ class TestGetData(unittest.TestCase):
         get_data("s3://bucket/data/file.csv")
         mock_handle_csv.assert_called_once_with("s3://bucket/data/file.csv")
 
+    @patch("src.utils.get_data.handle_json")
+    @patch("src.utils.get_data.get_file_type")
+    def test_get_data_calls_handle_csv_when_file_type_is_json(
+            self,
+            mock_get_file_type,
+            mock_handle_json
+    ):
+        mock_get_file_type.return_value = 'json'
+        get_data("s3://bucket/data/file.json")
+        mock_handle_json.assert_called_once_with("s3://bucket/data/file.json")
+
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_handles_unsupported_file_type(self, mock_get_file_type):
         mock_get_file_type.return_value = 'txt'
