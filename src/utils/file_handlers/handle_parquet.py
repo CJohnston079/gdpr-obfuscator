@@ -10,8 +10,8 @@ def handle_parquet(file_path):
 
     Args:
         file_path (str): The S3 bucket path to the Parquet file to be read.
-        file_path should be in the format
-        's3://bucket_name/path/to/file.parquet'.
+        file_path should be in the format 's3://bucket_name/path/to/file.pq'
+        or 's3://bucket_name/path/to/file.parquet'.
 
     Returns:
         list:
