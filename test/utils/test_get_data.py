@@ -44,6 +44,19 @@ class TestGetData(unittest.TestCase):
         get_data("s3://bucket/data/file.json")
         mock_handle_json.assert_called_once_with("s3://bucket/data/file.json")
 
+    @patch("src.utils.get_data.handle_parquet")
+    @patch("src.utils.get_data.get_file_type")
+    def test_get_data_calls_handle_csv_when_file_type_is_parquet(
+            self,
+            mock_get_file_type,
+            mock_handle_parquet
+    ):
+        mock_get_file_type.return_value = 'parquet'
+        get_data("s3://bucket/data/file.parquet")
+        mock_handle_parquet.assert_called_once_with(
+            "s3://bucket/data/file.parquet"
+        )
+
     @patch("src.utils.get_data.handle_csv")
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_calls_returns_expected_data(
