@@ -23,12 +23,17 @@ class TestHandleParquet(unittest.TestCase):
         pq.write_table(table, parquet_buffer)
         parquet_data = parquet_buffer.getvalue().to_pybytes()
 
-        bucket_name = 'test-bucket'
+        self.bucket_name = 'test-bucket'
         s3 = boto3.client("s3", region_name="us-east-1")
         s3.create_bucket(Bucket="test-bucket")
         s3.put_object(
-            Bucket=bucket_name,
+            Bucket=self.bucket_name,
             Key='test/test.parquet',
+            Body=parquet_data
+        )
+        s3.put_object(
+            Bucket=self.bucket_name,
+            Key='test/test.pq',
             Body=parquet_data
         )
 
@@ -48,11 +53,10 @@ class TestHandleParquet(unittest.TestCase):
         pq.write_table(empty_table, empty_buffer)
         empty_parquet_data = empty_buffer.getvalue().to_pybytes()
 
-        bucket_name = 'test-bucket'
         s3 = boto3.client("s3", region_name="us-east-1")
-        s3.create_bucket(Bucket=bucket_name)
+        s3.create_bucket(Bucket=self.bucket_name)
         s3.put_object(
-            Bucket=bucket_name,
+            Bucket=self.bucket_name,
             Key='test/empty-file.parquet',
             Body=empty_parquet_data
         )
@@ -62,6 +66,10 @@ class TestHandleParquet(unittest.TestCase):
 
     def test_returns_expected_data(self):
         result = handle_parquet("s3://test-bucket/test/test.parquet")
+        self.assertEqual(result, self.sample_data)
+
+    def test_handles_files_with_pq_extension(self):
+        result = handle_parquet("s3://test-bucket/test/test.pq")
         self.assertEqual(result, self.sample_data)
 
 
