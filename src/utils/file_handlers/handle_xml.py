@@ -18,12 +18,9 @@ def handle_xml(file_path):
     root = ET.fromstring(content)
     data_tag = root[0].tag
 
-    data = []
-
-    for element in root.findall(f'.//{data_tag}'):
-        item_data = {}
-        for child in element:
-            item_data[child.tag] = child.text
-        data.append(item_data)
+    data = [
+        {child.tag: child.text for child in element}
+        for element in root.findall(f".//{data_tag}")
+    ]
 
     return data
