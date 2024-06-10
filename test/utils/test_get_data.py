@@ -57,6 +57,19 @@ class TestGetData(unittest.TestCase):
             "s3://bucket/data/file.parquet"
         )
 
+    @patch("src.utils.get_data.handle_xml")
+    @patch("src.utils.get_data.get_file_type")
+    def test_get_data_calls_handle_csv_when_file_type_is_xml(
+            self,
+            mock_get_file_type,
+            mock_handle_xml
+    ):
+        mock_get_file_type.return_value = 'xml'
+        get_data("s3://bucket/data/file.xml")
+        mock_handle_xml.assert_called_once_with(
+            "s3://bucket/data/file.xml"
+        )
+
     @patch("src.utils.get_data.handle_csv")
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_calls_returns_expected_data(
