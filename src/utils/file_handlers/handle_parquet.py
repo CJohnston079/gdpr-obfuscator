@@ -4,6 +4,23 @@ import pyarrow.parquet as pq
 
 
 def handle_parquet(file_path):
+    """
+    Reads the contents of a Parquet file from an AWS S3 bucket and returns a
+    list of dictionaries.
+
+    Args:
+        file_path (str): The S3 bucket path to the Parquet file to be read.
+        file_path should be in the format
+        's3://bucket_name/path/to/file.parquet'.
+
+    Returns:
+        list:
+            A list of dictionaries representing the rows in the Parquet file.
+            Each dictionary contains key-value pairs where the keys are
+            column headers and the values are the corresponding values from
+            each row in the Parquet file.
+    """
+
     bucket_name = file_path.split('/')[2]
     key = '/'.join(file_path.split('/')[3:])
 
