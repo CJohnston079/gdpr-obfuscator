@@ -26,10 +26,10 @@ def get_data(file_path):
     file_type = get_file_type(file_path)
 
     handlers = {
-        'csv': handle_csv,
-        'json': handle_json,
-        'parquet': handle_parquet,
-        'xml': handle_xml
+        "csv": handle_csv,
+        "json": handle_json,
+        "parquet": handle_parquet,
+        "xml": handle_xml
     }
 
     handler = handlers.get(file_type)
