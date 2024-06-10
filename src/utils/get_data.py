@@ -1,5 +1,10 @@
 from src.utils.get_file_type import get_file_type
-from src.utils.file_handlers import handle_csv, handle_json, handle_parquet
+from src.utils.file_handlers import (
+    handle_csv,
+    handle_json,
+    handle_parquet,
+    handle_xml
+)
 
 
 def get_data(file_path):
@@ -23,7 +28,8 @@ def get_data(file_path):
     handlers = {
         'csv': handle_csv,
         'json': handle_json,
-        'parquet': handle_parquet
+        'parquet': handle_parquet,
+        'xml': handle_xml
     }
 
     handler = handlers.get(file_type)
