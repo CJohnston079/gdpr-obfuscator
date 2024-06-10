@@ -1,6 +1,7 @@
 from src.utils.get_file_type import get_file_type
 from src.utils.file_handlers.handle_csv import handle_csv
 from src.utils.file_handlers.handle_json import handle_json
+from src.utils.file_handlers.handle_parquet import handle_parquet
 
 
 def get_data(file_path):
@@ -25,6 +26,8 @@ def get_data(file_path):
         data = handle_csv(file_path)
     elif file_type == 'json':
         data = handle_json(file_path)
+    elif file_type == 'parquet':
+        data = handle_parquet(file_path)
     else:
         raise ValueError(
             f"File type .{file_type} is not supported."
