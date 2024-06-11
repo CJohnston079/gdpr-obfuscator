@@ -25,4 +25,6 @@ def handle_json(file_path):
     response = s3.get_object(Bucket=bucket_name, Key=key)
     content = response['Body'].read().decode('utf-8')
 
-    return json.loads(content) if content else []
+    data = json.loads(content) if content else []
+
+    return data

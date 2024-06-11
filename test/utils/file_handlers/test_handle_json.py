@@ -22,8 +22,8 @@ class TestHandleJson(unittest.TestCase):
                 'age': '44',
                 'city': 'York',
                 'contact': [
-                    {'type': 'email', 'value': 'george@bluthcompany.com'},
-                    {'type': 'phone', 'value': '01904 123456'}
+                    {'email': 'george@bluthcompany.com'},
+                    {'phone': '01904 123456'}
                 ],
             },
             {
@@ -31,8 +31,8 @@ class TestHandleJson(unittest.TestCase):
                 'age': '40',
                 'city': 'Leeds',
                 'contact': [
-                    {'type': 'email', 'value': 'lindsay@bluthcompany.com'},
-                    {'type': 'phone', 'value': '0113 123456'}
+                    {'email': 'lindsay@bluthcompany.com'},
+                    {'phone': '0113 123456'}
                 ],
             },
             {
@@ -52,39 +52,39 @@ class TestHandleJson(unittest.TestCase):
         bucket_name = 'test-bucket'
         s3 = boto3.client("s3", region_name="us-east-1")
         s3.create_bucket(Bucket="test-bucket")
-        s3.put_object(Bucket=bucket_name, Key='test/test_empty.json', Body="")
+        s3.put_object(Bucket=bucket_name, Key='test/test-empty.json', Body="")
         s3.put_object(
             Bucket=bucket_name,
-            Key='test/test-shallow.json',
+            Key='test/shallow-data.json',
             Body=sample_shallow_json_data
         )
         s3.put_object(
             Bucket=bucket_name,
-            Key='test/test-deep.json',
+            Key='test/deep-data.json',
             Body=sample_deep_json_data
         )
 
     def test_returns_list_of_dicts(self):
-        result = handle_json("s3://test-bucket/test/test-shallow.json")
+        result = handle_json("s3://test-bucket/test/shallow-data.json")
         self.assertIsInstance(result, list)
         self.assertTrue(all(isinstance(row, dict) for row in result))
 
     def test_returns_list_of_expected_length(self):
-        result = handle_json("s3://test-bucket/test/test-shallow.json")
+        result = handle_json("s3://test-bucket/test/shallow-data.json")
         self.assertEqual(len(result), 3)
 
     def test_returns_empty_list_when_passed_empty_file(self):
-        result = handle_json("s3://test-bucket/test/test_empty.json")
+        result = handle_json("s3://test-bucket/test/test-empty.json")
 
         print(result)
         self.assertEqual(result, [])
 
     def test_returns_expected_shallow_data(self):
-        result = handle_json("s3://test-bucket/test/test-shallow.json")
+        result = handle_json("s3://test-bucket/test/shallow-data.json")
         self.assertEqual(result, self.sample_shallow_data)
 
     def test_returns_expected_deep_data(self):
-        result = handle_json("s3://test-bucket/test/test-deep.json")
+        result = handle_json("s3://test-bucket/test/deep-data.json")
         self.assertEqual(result, self.sample_deep_data)
 
 
