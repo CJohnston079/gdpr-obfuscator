@@ -1,3 +1,4 @@
+import untangle
 import xml.etree.ElementTree as ET
 import boto3
 import io
@@ -37,11 +38,16 @@ def handle_xml(file_path):
         return []
 
     root = ET.fromstring(content)
-    data_tag = root[0].tag
 
-    data = [
-        {child.tag: child.text for child in element}
-        for element in root.findall(f".//{data_tag}")
-    ]
+    def parse_element(element):
+        if len(element) == 0:
+            return {element.tag: element.text}
+        else:
+            children = {}
+            for child in element:
+                children.update(parse_element(child))
+            return {element.tag: children}
+
+    data = [parse_element(child) for child in root]
 
     return data
