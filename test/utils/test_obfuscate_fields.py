@@ -29,8 +29,18 @@ class TestObfuscateFields():
 
         assert result == obfc_shallow_data
 
-    def test_obfuscates_targeted_fields_in_deep_data(self, ts_deep_data):
-        deep_data, obfc_deep_data = ts_deep_data
+    def test_obfuscates_targeted_fields_in_deep_array_based_data(
+        self, ts_deep_array_based_data
+    ):
+        deep_data, obfc_deep_data = ts_deep_array_based_data
+        result = obfuscate_fields(deep_data, ["name", "email", "phone"])
+
+        assert result == obfc_deep_data
+
+    def test_obfuscates_targeted_fields_in_deep_object_based_data(
+        self, ts_deep_object_based_data
+    ):
+        deep_data, obfc_deep_data = ts_deep_object_based_data
         result = obfuscate_fields(deep_data, ["name", "email", "phone"])
 
         assert result == obfc_deep_data
