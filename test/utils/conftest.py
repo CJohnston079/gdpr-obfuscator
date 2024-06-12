@@ -6,16 +6,16 @@ from data_generation import (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def ts_shallow_data():
     return generate_shallow_data()
 
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def ts_deep_array_based_data():
     return generate_deep_array_based_data()
 
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def ts_deep_object_based_data():
     return generate_deep_object_based_data()
