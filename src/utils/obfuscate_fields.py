@@ -24,6 +24,8 @@ def obfuscate_fields(data, fields):
         for key, value in record.items():
             if (isinstance(value, list)):
                 obfuscated_record[key] = obfuscate_fields(value, fields)
+            elif (isinstance(value, dict)):
+                obfuscated_record[key] = obfuscate_fields([value], fields)[0]
             else:
                 obfuscated_record[key] = "***" if key in fields else value
 
