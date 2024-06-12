@@ -20,13 +20,13 @@ def handle_xml(file_path):
             elements of that tag in the same format.
     """
 
-    bucket_name = file_path.split('/')[2]
-    key = '/'.join(file_path.split('/')[3:])
+    bucket_name = file_path.split("/")[2]
+    key = "/".join(file_path.split("/")[3:])
 
     s3 = boto3.client("s3", region_name="eu-west-2")
 
     response = s3.get_object(Bucket=bucket_name, Key=key)
-    content = response['Body'].read().decode('utf-8')
+    content = response["Body"].read().decode("utf-8")
 
     if not content:
         return []

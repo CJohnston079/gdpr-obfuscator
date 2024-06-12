@@ -12,9 +12,9 @@ from src.utils.file_handlers.handle_parquet import handle_parquet
 class TestHandleParquet(unittest.TestCase):
     def setUp(self):
         self.sample_data = [
-            {'name': 'George', 'age': 44, 'city': 'York'},
-            {'name': 'Lindsay', 'age': 40, 'city': 'Leeds'},
-            {'name': 'Michael', 'age': 37, 'city': 'Sheffield'}
+            {"name": "George", "age": 44, "city": "York"},
+            {"name": "Lindsay", "age": 40, "city": "Leeds"},
+            {"name": "Michael", "age": 37, "city": "Sheffield"}
         ]
 
         df = pd.DataFrame(self.sample_data)
@@ -23,17 +23,17 @@ class TestHandleParquet(unittest.TestCase):
         pq.write_table(table, parquet_buffer)
         parquet_data = parquet_buffer.getvalue().to_pybytes()
 
-        self.bucket_name = 'test-bucket'
+        self.bucket_name = "test-bucket"
         s3 = boto3.client("s3", region_name="us-east-1")
         s3.create_bucket(Bucket="test-bucket")
         s3.put_object(
             Bucket=self.bucket_name,
-            Key='test/test.parquet',
+            Key="test/test.parquet",
             Body=parquet_data
         )
         s3.put_object(
             Bucket=self.bucket_name,
-            Key='test/test.pq',
+            Key="test/test.pq",
             Body=parquet_data
         )
 
@@ -57,7 +57,7 @@ class TestHandleParquet(unittest.TestCase):
         s3.create_bucket(Bucket=self.bucket_name)
         s3.put_object(
             Bucket=self.bucket_name,
-            Key='test/empty-file.parquet',
+            Key="test/empty-file.parquet",
             Body=empty_parquet_data
         )
 
@@ -73,5 +73,5 @@ class TestHandleParquet(unittest.TestCase):
         self.assertEqual(result, self.sample_data)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()

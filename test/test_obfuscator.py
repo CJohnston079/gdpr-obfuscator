@@ -7,20 +7,20 @@ from src.obfuscator import obfuscator
 class TestObfuscator(unittest.TestCase):
     def setUp(self):
         self.original_data = [
-            {'name': 'George', 'age': '44', 'city': 'York'},
-            {'name': 'Lindsay', 'age': '40', 'city': 'Leeds'},
-            {'name': 'Michael', 'age': '37', 'city': 'Sheffield'}
+            {"name": "George", "age": "44", "city": "York"},
+            {"name": "Lindsay", "age": "40", "city": "Leeds"},
+            {"name": "Michael", "age": "37", "city": "Sheffield"}
         ]
         self.obfuscated_data = [
-            {'name': '***', 'age': '***', 'city': 'York'},
-            {'name': '***', 'age': '***', 'city': 'Leeds'},
-            {'name': '***', 'age': '***', 'city': 'Sheffield'}
+            {"name": "***", "age": "***", "city": "York"},
+            {"name": "***", "age": "***", "city": "Leeds"},
+            {"name": "***", "age": "***", "city": "Sheffield"}
         ]
-        self.serialized_data = '''[
-            {'name': '***', 'age': '***', 'city': 'York'},
-            {'name': '***', 'age': '***', 'city': 'Leeds'},
-            {'name': '***', 'age': '***', 'city': 'Sheffield'}
-        ]'''
+        self.serialized_data = """[
+            {"name": "***", "age": "***", "city": "York"},
+            {"name": "***", "age": "***", "city": "Leeds"},
+            {"name": "***", "age": "***", "city": "Sheffield"}
+        ]"""
 
     @patch("src.obfuscator.serialise_dicts")
     @patch("src.obfuscator.obfuscate_fields")
@@ -50,5 +50,5 @@ class TestObfuscator(unittest.TestCase):
         assert result == self.serialized_data
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()

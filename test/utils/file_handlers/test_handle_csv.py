@@ -10,9 +10,9 @@ from src.utils.file_handlers.handle_csv import handle_csv
 class TestHandleCSV(unittest.TestCase):
     def setUp(self):
         self.sample_data = [
-            {'name': 'George', 'age': '44', 'city': 'York'},
-            {'name': 'Lindsay', 'age': '40', 'city': 'Leeds'},
-            {'name': 'Michael', 'age': '37', 'city': 'Sheffield'}
+            {"name": "George", "age": "44", "city": "York"},
+            {"name": "Lindsay", "age": "40", "city": "Leeds"},
+            {"name": "Michael", "age": "37", "city": "Sheffield"}
         ]
 
         sample_csv_data = (
@@ -22,13 +22,13 @@ class TestHandleCSV(unittest.TestCase):
             "Michael,37,Sheffield"
         )
 
-        bucket_name = 'test-bucket'
+        bucket_name = "test-bucket"
         s3 = boto3.client("s3", region_name="us-east-1")
         s3.create_bucket(Bucket="test-bucket")
-        s3.put_object(Bucket=bucket_name, Key='test/empty-file.csv', Body="")
+        s3.put_object(Bucket=bucket_name, Key="test/empty-file.csv", Body="")
         s3.put_object(
             Bucket=bucket_name,
-            Key='test/test.csv',
+            Key="test/test.csv",
             Body=sample_csv_data
         )
 
@@ -50,5 +50,5 @@ class TestHandleCSV(unittest.TestCase):
         self.assertEqual(result, self.sample_data)
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()
