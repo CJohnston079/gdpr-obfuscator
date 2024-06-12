@@ -4,7 +4,8 @@ def obfuscate_fields(data, fields):
 
     This function takes a list of dictionaries representing records (data) and
     a list of fields to obfuscate. It returns a new list of dictionaries where
-    the specified fields are replaced with '***'.
+    the specified fields are replaced with '***', retaining the original
+    structure of the data.
 
     Args:
         data (list of dict): A list of dictionaries representing records, where
