@@ -1,4 +1,3 @@
-import untangle
 import xml.etree.ElementTree as ET
 import boto3
 import io

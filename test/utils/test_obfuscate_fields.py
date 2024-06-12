@@ -1,5 +1,4 @@
 import copy
-import pytest
 import unittest
 from src.utils.obfuscate_fields import obfuscate_fields
 
@@ -21,7 +20,9 @@ class TestObfuscateFields():
         original_data = copy.deepcopy(shallow_data)
         obfuscate_fields(shallow_data, ["name"])
 
-        assert shallow_data == original_data, "Input data should not be mutated"
+        assert shallow_data == original_data, (
+            "Input data should not be mutated"
+        )
 
     def test_obfuscates_targeted_fields_in_shallow_data(self, ts_shallow_data):
         shallow_data, obfc_shallow_data = ts_shallow_data
