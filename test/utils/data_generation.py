@@ -10,6 +10,8 @@ def generate_data(*generate, num_records=3):
         name = fake.name()
         age = str(fake.random_int(min=18, max=66))
         city = fake.city()
+        email_address = fake.email()
+        phone_number = fake.phone_number()
 
         for key in generate:
             if "shallow_list_based" in key:
@@ -20,6 +22,38 @@ def generate_data(*generate, num_records=3):
                 entry = {"person": {"name": name, "age": age, "city": city}}
             elif "shallow_object_based_obfuscated" in key:
                 entry = {"person": {"name": "***", "age": age, "city": city}}
+            elif "deep_object_based" in key:
+                entry = {"person": {
+                    "name": name,
+                    "age": age,
+                    "city": city,
+                    "contact": {
+                        "email": email_address,
+                        "phone": phone_number
+                    }
+                }}
+            elif "deep_object_based_obfuscated" in key:
+                entry = {"person": {
+                    "name": "***",
+                    "age": age,
+                    "city": city,
+                    "contact": {
+                        "email": "***",
+                        "phone": "***"
+                    }
+                }}
+            elif "shallow_xml_str" in key:
+                entry = (
+                    f"<person>"
+                    f"<name>{name}</name><age>{age}</age><city>{city}</city>"
+                    f"</person>")
+            elif "deep_xml_str" in key:
+                entry = (
+                    f"<person>"
+                    f"<name>{name}</name><age>{age}</age><city>{city}</city>"
+                    f"<contact><email>{email_address}</email>"
+                    f"<phone>{phone_number}</phone></contact>"
+                    f"</person>")
 
             data[key].append(entry)
 
