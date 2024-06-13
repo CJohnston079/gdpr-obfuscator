@@ -9,12 +9,15 @@ from data_generation import (
 
 @pytest.fixture(scope="session")
 def generate_shallow_data():
-    return generate_data("shallow", "obfuscated")
+    return generate_data(
+        "shallow_list_based",
+        "shallow_list_based_obfuscated"
+    )
 
 
 @pytest.fixture(scope="class")
 def test_shallow_data(generate_shallow_data):
-    return generate_shallow_data["shallow"]
+    return generate_shallow_data["shallow_list_based"]
 
 
 @pytest.fixture(scope="class")

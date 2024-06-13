@@ -11,12 +11,17 @@ def generate_data(*generate, num_records=3):
         age = str(fake.random_int(min=18, max=66))
         city = fake.city()
 
-        if "shallow" in generate:
-            shallow_data = {"name": name, "age": age, "city": city}
-            data["shallow"].append(shallow_data)
-        if "shallow_obfuscated" in generate:
-            obfuscated_date = {"name": "***", "age": age, "city": city}
-            data["obfuscated"].append(obfuscated_date)
+        for key in generate:
+            if "shallow_list_based" in key:
+                entry = {"name": name, "age": age, "city": city}
+            elif "shallow_list_based_obfuscated" in key:
+                entry = {"name": "***", "age": age, "city": city}
+            elif "shallow_object_based" in key:
+                entry = {"person": {"name": name, "age": age, "city": city}}
+            elif "shallow_object_based_obfuscated" in key:
+                entry = {"person": {"name": "***", "age": age, "city": city}}
+
+            data[key].append(entry)
 
     return data
 
