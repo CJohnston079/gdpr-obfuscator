@@ -3,7 +3,7 @@ import pytest
 from moto import mock_aws
 
 
-@pytest.fixture(scope="class", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def s3_bucket():
     with mock_aws():
         bucket_name = "test-bucket"
