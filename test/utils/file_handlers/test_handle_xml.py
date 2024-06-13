@@ -1,20 +1,21 @@
 import boto3
-import unittest
+import pytest
 
-from moto import mock_aws
 from src.utils.file_handlers.handle_xml import handle_xml
 
 
-@mock_aws
-class TestHandleXML(unittest.TestCase):
-    def setUp(self):
-        self.sample_shallow_data = [
+class TestHandleXML():
+    @pytest.fixture(scope="class", autouse=True)
+    def setup_method(self, s3_bucket):
+        s3, bucket_name = s3_bucket
+
+        sample_shallow_data = [
             {"person": {"name": "George", "age": "44", "city": "York"}},
             {"person": {"name": "Lindsay", "age": "40", "city": "Leeds"}},
             {"person": {"name": "Michael", "age": "37", "city": "Sheffield"}}
         ]
 
-        self.sample_deep_data = [
+        sample_deep_data = [
             {"person":
                 {"name": "George", "age": "44", "city": "York", "contact":
                     {"email": "george@bluthcompany.com", "phone": "01904 123456"}
@@ -74,9 +75,6 @@ class TestHandleXML(unittest.TestCase):
           """
         )
 
-        bucket_name = "test-bucket"
-        s3 = boto3.client("s3", region_name="us-east-1")
-        s3.create_bucket(Bucket="test-bucket")
         s3.put_object(Bucket=bucket_name, Key="test/empty-file.xml", Body="")
         s3.put_object(
             Bucket=bucket_name,
@@ -89,26 +87,30 @@ class TestHandleXML(unittest.TestCase):
             Body=sample_deep_xml_data
         )
 
+        return sample_shallow_data, sample_deep_data
+
     def test_returns_list_of_dicts(self):
         result = handle_xml("s3://test-bucket/test/shallow-data.xml")
-        self.assertIsInstance(result, list)
-        self.assertTrue(all(isinstance(row, dict) for row in result))
+        assert isinstance(result, list)
+        assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self):
         result = handle_xml("s3://test-bucket/test/shallow-data.xml")
-        self.assertEqual(len(result), 3)
+        assert len(result) == 3
 
     def test_returns_empty_list_when_passed_empty_file(self):
         result = handle_xml("s3://test-bucket/test/empty-file.xml")
-        self.assertEqual(result, [])
+        assert result == []
 
-    def test_returns_expected_shallow_data(self):
+    def test_returns_expected_shallow_data(self, setup_method):
+        sample_shallow_data, _ = setup_method
         result = handle_xml("s3://test-bucket/test/shallow-data.xml")
-        self.assertEqual(result, self.sample_shallow_data)
+        assert result == sample_shallow_data
 
-    def test_returns_expected_deep_data(self):
+    def test_returns_expected_deep_data(self, setup_method):
+        _, sample_deep_data = setup_method
         result = handle_xml("s3://test-bucket/test/deep-data.xml")
-        self.assertEqual(result, self.sample_deep_data)
+        assert result == sample_deep_data
 
 
 if __name__ == "__main__":  # pragma: no cover
