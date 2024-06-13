@@ -52,5 +52,5 @@ class TestHandleJson:
         assert result == deep_data
 
 
-if __name__ == "__main__":
-    pytest.main()
+if __name__ == "__main__":  # pragma: no cover
+    unittest.main()

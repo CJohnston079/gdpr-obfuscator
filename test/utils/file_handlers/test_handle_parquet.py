@@ -69,3 +69,7 @@ class TestHandleParquet:
         shallow_data, _ = ts_shallow_data
         result = handle_parquet("s3://test-bucket/dir/test_pq.pq")
         assert result == shallow_data
+
+
+if __name__ == "__main__":  # pragma: no cover
+    unittest.main()
