@@ -6,7 +6,7 @@ from src.utils.file_handlers.handle_xml import handle_xml
 
 class TestHandleXML():
     @pytest.fixture(scope="class", autouse=True)
-    def setup_method(self, s3_bucket):
+    def set_up_s3_data(self, s3_bucket):
         s3, bucket_name = s3_bucket
 
         sample_shallow_data = [
@@ -94,8 +94,8 @@ class TestHandleXML():
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
-    def test_returns_list_of_expected_length(self, setup_method):
-        sample_shallow_data, _ = setup_method
+    def test_returns_list_of_expected_length(self, set_up_s3_data):
+        sample_shallow_data, _ = set_up_s3_data
         result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
         assert len(result) == len(sample_shallow_data)
 
@@ -103,12 +103,12 @@ class TestHandleXML():
         result = handle_xml("s3://test-bucket/dir/empty-file.xml")
         assert result == []
 
-    def test_returns_expected_shallow_data(self, setup_method):
-        sample_shallow_data, _ = setup_method
+    def test_returns_expected_shallow_data(self, set_up_s3_data):
+        sample_shallow_data, _ = set_up_s3_data
         result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
         assert result == sample_shallow_data
 
-    def test_returns_expected_deep_data(self, setup_method):
-        _, sample_deep_data = setup_method
+    def test_returns_expected_deep_data(self, set_up_s3_data):
+        _, sample_deep_data = set_up_s3_data
         result = handle_xml("s3://test-bucket/dir/deep-data.xml")
         assert result == sample_deep_data
