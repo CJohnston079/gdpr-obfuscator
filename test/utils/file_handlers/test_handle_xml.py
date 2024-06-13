@@ -75,43 +75,40 @@ class TestHandleXML():
           """
         )
 
-        s3.put_object(Bucket=bucket_name, Key="test/empty-file.xml", Body="")
+        s3.put_object(Bucket=bucket_name, Key="dir/empty-file.xml", Body="")
         s3.put_object(
             Bucket=bucket_name,
-            Key="test/shallow-data.xml",
+            Key="dir/shallow-data.xml",
             Body=sample_shallow_xml_data
         )
         s3.put_object(
             Bucket=bucket_name,
-            Key="test/deep-data.xml",
+            Key="dir/deep-data.xml",
             Body=sample_deep_xml_data
         )
 
         return sample_shallow_data, sample_deep_data
 
     def test_returns_list_of_dicts(self):
-        result = handle_xml("s3://test-bucket/test/shallow-data.xml")
+        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
-    def test_returns_list_of_expected_length(self):
-        result = handle_xml("s3://test-bucket/test/shallow-data.xml")
-        assert len(result) == 3
+    def test_returns_list_of_expected_length(self, setup_method):
+        sample_shallow_data, _ = setup_method
+        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
+        assert len(result) == len(sample_shallow_data)
 
     def test_returns_empty_list_when_passed_empty_file(self):
-        result = handle_xml("s3://test-bucket/test/empty-file.xml")
+        result = handle_xml("s3://test-bucket/dir/empty-file.xml")
         assert result == []
 
     def test_returns_expected_shallow_data(self, setup_method):
         sample_shallow_data, _ = setup_method
-        result = handle_xml("s3://test-bucket/test/shallow-data.xml")
+        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
         assert result == sample_shallow_data
 
     def test_returns_expected_deep_data(self, setup_method):
         _, sample_deep_data = setup_method
-        result = handle_xml("s3://test-bucket/test/deep-data.xml")
+        result = handle_xml("s3://test-bucket/dir/deep-data.xml")
         assert result == sample_deep_data
-
-
-if __name__ == "__main__":  # pragma: no cover
-    unittest.main()
