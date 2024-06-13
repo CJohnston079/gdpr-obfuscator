@@ -18,23 +18,23 @@ class TestHandleJSON:
         s3.put_object(Bucket=bucket_name, Key="test/empty.json", Body="")
         s3.put_object(
             Bucket=bucket_name,
-            Key="test/shallow-data.json",
+            Key="test/shallowData.json",
             Body=json.dumps(shallow_data)
         )
         s3.put_object(
             Bucket=bucket_name,
-            Key="test/deep-data.json",
+            Key="test/deepData.json",
             Body=json.dumps(deep_data)
         )
 
     def test_returns_list_of_dicts(self):
-        result = handle_json("s3://test-bucket/test/shallow-data.json")
+        result = handle_json("s3://test-bucket/test/shallowData.json")
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, test_shallow_data):
         shallow_data = test_shallow_data
-        result = handle_json("s3://test-bucket/test/shallow-data.json")
+        result = handle_json("s3://test-bucket/test/shallowData.json")
         assert len(result) == len(shallow_data)
 
     def test_returns_empty_list_when_passed_empty_file(self):
@@ -43,10 +43,10 @@ class TestHandleJSON:
 
     def test_returns_expected_shallow_data(self, test_shallow_data):
         shallow_data = test_shallow_data
-        result = handle_json("s3://test-bucket/test/shallow-data.json")
+        result = handle_json("s3://test-bucket/test/shallowData.json")
         assert result == shallow_data
 
     def test_returns_expected_deep_data(self, ts_deep_array_based_data):
         deep_data, _ = ts_deep_array_based_data
-        result = handle_json("s3://test-bucket/test/deep-data.json")
+        result = handle_json("s3://test-bucket/test/deepData.json")
         assert result == deep_data
