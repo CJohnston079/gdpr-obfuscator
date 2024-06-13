@@ -3,23 +3,22 @@ from faker import Faker
 fake = Faker("en_GB")
 
 
-def generate_shallow_data_sets(num_records=3):
-    data = []
-    obfuscated_data = []
+def generate_data(*generate, num_records=3):
+    data = {key: [] for key in generate}
 
     for _ in range(num_records):
         name = fake.name()
         age = str(fake.random_int(min=18, max=66))
         city = fake.city()
 
-        data.append({"name": name, "age": age, "city": city})
-        obfuscated_data.append(
-            {"name": "***", "age": str(age), "city": city})
+        if "shallow" in generate:
+            shallow_data = {"name": name, "age": age, "city": city}
+            data["shallow"].append(shallow_data)
+        if "shallow_obfuscated" in generate:
+            obfuscated_date = {"name": "***", "age": age, "city": city}
+            data["obfuscated"].append(obfuscated_date)
 
-    return {
-        "data": data,
-        "obfuscated_data": obfuscated_data
-    }
+    return data
 
 
 def generate_shallow_data_old(num_records=3):
