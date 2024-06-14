@@ -8,7 +8,7 @@ from data_generation import (
 
 
 @pytest.fixture(scope="session")
-def generate_shallow_data():
+def test_shallow_data():
     return generate_data(
         "shallow_list_based",
         "shallow_list_based_obfuscated",
@@ -17,24 +17,14 @@ def generate_shallow_data():
     )
 
 
-@pytest.fixture(scope="class")
-def test_shallow_data(generate_shallow_data):
-    return generate_shallow_data["shallow_list_based"]
-
-
 @pytest.fixture(scope="session")
-def generate_deep_data():
+def test_deep_data():
     return generate_data(
         "deep_list_based",
         "deep_list_based_obfuscated",
         "deep_object_based",
         "deep_object_based_obfuscated",
     )
-
-
-@pytest.fixture(scope="class")
-def test_deep_data(generate_deep_data):
-    return generate_deep_data["deep_list_based"]
 
 
 @pytest.fixture(scope="session")

@@ -12,8 +12,8 @@ class TestHandleJSON:
         self, s3_bucket, test_shallow_data, test_deep_data
     ):
         s3, bucket_name = s3_bucket
-        shallow_data = test_shallow_data
-        deep_data = test_deep_data
+        shallow_data = test_shallow_data["shallow_list_based"]
+        deep_data = test_deep_data["deep_list_based"]
 
         s3.put_object(Bucket=bucket_name, Key="test/empty.json", Body="")
         s3.put_object(
@@ -33,7 +33,7 @@ class TestHandleJSON:
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, test_shallow_data):
-        shallow_data = test_shallow_data
+        shallow_data = test_shallow_data["shallow_list_based"]
         result = handle_json("s3://test-bucket/test/shallowData.json")
         assert len(result) == len(shallow_data)
 
@@ -42,11 +42,11 @@ class TestHandleJSON:
         assert result == []
 
     def test_returns_expected_shallow_data(self, test_shallow_data):
-        shallow_data = test_shallow_data
+        shallow_data = test_shallow_data["shallow_list_based"]
         result = handle_json("s3://test-bucket/test/shallowData.json")
         assert result == shallow_data
 
     def test_returns_expected_deep_data(self, test_deep_data):
-        deep_data = test_deep_data
+        deep_data = test_deep_data["deep_list_based"]
         result = handle_json("s3://test-bucket/test/deepData.json")
         assert result == deep_data

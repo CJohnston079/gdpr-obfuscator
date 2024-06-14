@@ -8,7 +8,7 @@ class TestHandleCSV():
     @pytest.fixture(scope="class", autouse=True)
     def set_up_s3_data(self, s3_bucket, test_shallow_data):
         s3, bucket_name = s3_bucket
-        data = test_shallow_data
+        data = test_shallow_data["shallow_list_based"]
 
         headers = data[0].keys()
         rows = [",".join([row[key] for key in headers]) for row in data]

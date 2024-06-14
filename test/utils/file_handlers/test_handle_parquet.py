@@ -13,7 +13,7 @@ class TestHandleParquet:
     @pytest.fixture(autouse=True)
     def set_up_s3_data(self, s3_bucket, test_shallow_data):
         s3, bucket_name = s3_bucket
-        data = test_shallow_data
+        data = test_shallow_data["shallow_list_based"]
 
         df = pd.DataFrame(data)
         table = pa.Table.from_pandas(df)
@@ -38,7 +38,7 @@ class TestHandleParquet:
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, test_shallow_data):
-        data = test_shallow_data
+        data = test_shallow_data["shallow_list_based"]
         result = handle_parquet("s3://test-bucket/dir/test_parquet.parquet")
         assert len(result) == len(data)
 
@@ -61,12 +61,12 @@ class TestHandleParquet:
         assert result == []
 
     def test_returns_expected_data(self, test_shallow_data):
-        data = test_shallow_data
+        data = test_shallow_data["shallow_list_based"]
         result = handle_parquet("s3://test-bucket/dir/test_parquet.parquet")
         assert result == data
 
     def test_handles_files_with_pq_extension(self, test_shallow_data):
-        data = test_shallow_data
+        data = test_shallow_data["shallow_list_based"]
         result = handle_parquet("s3://test-bucket/dir/test_pq.pq")
         assert result == data
 
