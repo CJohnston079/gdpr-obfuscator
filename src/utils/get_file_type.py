@@ -17,7 +17,7 @@ def get_file_type(file_path):
     extension_map = {
         "csv": "csv",
         "json": "json",
-        "pqt": "parquet",
+        "pq": "parquet",
         "parquet": "parquet",
     }
 
