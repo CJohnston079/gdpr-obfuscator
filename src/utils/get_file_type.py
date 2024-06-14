@@ -17,9 +17,9 @@ def get_file_type(file_path):
     extension_pattern = r"\.(\w+)(?:\?.*|#.*)?$"
     extension = re.search(extension_pattern, file_path)
 
-    if not extension:
-        return None
-
-    file_type = extension.group(1)
+    if extension:
+        file_type = extension.group(1)
+    else:
+        raise ValueError(f"Unable to get file extension from {file_path}")
 
     return file_type
