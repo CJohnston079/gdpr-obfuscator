@@ -1,3 +1,5 @@
+import pytest
+
 from src.utils.get_file_type import get_file_type
 
 
@@ -32,6 +34,12 @@ class TestGetFileType:
         result = get_file_type("s3://bucket/data/file.csv#section")
         assert result == "csv"
 
+
+class TestGetFileTypeErrorHandling:
     def test_handles_files_without_extension(self):
-        result = get_file_type("s3://bucket/data/file")
-        assert result is None
+        with pytest.raises(ValueError) as e:
+            get_file_type("s3://bucket/data/file")
+
+        assert str(e.value) == (
+            "Unable to get file extension from s3://bucket/data/file"
+        )
