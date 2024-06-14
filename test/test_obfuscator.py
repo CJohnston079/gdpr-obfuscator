@@ -37,3 +37,16 @@ class TestObfuscator:
         serialise_dicts.assert_called_once_with(self.obfuscated_data)
 
         assert result == self.serialized_data
+
+
+class TestGetDataErrorHandling:
+    def test_raises_value_error_for_unsupported_file_types(self):
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.txt",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(ValueError) as e:
+            obfuscator(event)
+
+        assert str(e.value) == "File type .txt is not supported."
