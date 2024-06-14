@@ -5,8 +5,8 @@ from src.utils.serialise_dicts import serialise_dicts
 
 
 class TestSerialiseDicts:
-    def test_serialise_dicts_does_not_mutate_input(self, ts_shallow_data):
-        original_dicts, _ = ts_shallow_data
+    def test_serialise_dicts_does_not_mutate_input(self, generate_shallow_data):
+        original_dicts = generate_shallow_data["shallow_list_based"]
         copied_dicts = original_dicts.copy()
 
         serialised_data = serialise_dicts(original_dicts)
@@ -27,8 +27,8 @@ class TestSerialiseDicts:
 
         assert deserialised_data == dicts
 
-    def test_serialises_shallow_data(self, ts_shallow_data):
-        data, _ = ts_shallow_data
+    def test_serialises_shallow_data(self, generate_shallow_data):
+        data = generate_shallow_data["shallow_list_based"]
 
         serialised_data = serialise_dicts(data)
 
@@ -37,8 +37,8 @@ class TestSerialiseDicts:
 
         assert deserialised_data == data
 
-    def test_serialises_deep_array_based_data(self, ts_deep_array_based_data):
-        data, _ = ts_deep_array_based_data
+    def test_serialises_deep_array_based_data(self, generate_deep_data):
+        data = generate_deep_data["deep_list_based"]
 
         serialised_data = serialise_dicts(data)
 
@@ -49,9 +49,9 @@ class TestSerialiseDicts:
 
     def test_serialises_deep_object_based_data(
         self,
-        ts_deep_object_based_data
+        generate_deep_data
     ):
-        data, _ = ts_deep_object_based_data
+        data = generate_deep_data["deep_object_based"]
 
         serialised_data = serialise_dicts(data)
 
