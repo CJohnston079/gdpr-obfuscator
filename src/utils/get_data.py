@@ -26,6 +26,7 @@ def get_data(file_path):
     handlers = {
         "csv": handle_csv,
         "json": handle_json,
+        "pqt": handle_parquet,
         "parquet": handle_parquet,
         "xml": handle_xml,
     }
