@@ -1,10 +1,11 @@
 from faker import Faker
 
+
 fake = Faker("en_GB")
 
 
 def generate_data(*generate, num_records=3):
-    data = {key: [] for key in generate}
+    data_structures = {data_structure: [] for data_structure in generate}
 
     for _ in range(num_records):
         record = {
@@ -15,16 +16,16 @@ def generate_data(*generate, num_records=3):
             "phone": fake.phone_number()
         }
 
-        for key in generate:
-            entry = entry_generators[key](record)
-            data[key].append(entry)
+        for data_structure in generate:
+            entry = entry_generators[data_structure](record)
+            data_structures[data_structure].append(entry)
 
-    for key in data:
-        if key.endswith("_xml_str"):
-            xml_entries = "".join(data[key])
-            data[key] = f'<root>{xml_entries}</root>'
+    for data_structure in data_structures:
+        if data_structure.endswith("_xml_str"):
+            xml_entries = "".join(data_structures[data_structure])
+            data_structures[data_structure] = f'<root>{xml_entries}</root>'
 
-    return data
+    return data_structures
 
 
 entry_generators = {
