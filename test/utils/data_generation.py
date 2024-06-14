@@ -7,68 +7,91 @@ def generate_data(*generate, num_records=3):
     data = {key: [] for key in generate}
 
     for _ in range(num_records):
-        name = fake.name()
-        age = str(fake.random_int(min=18, max=66))
-        city = fake.city()
-        email_address = fake.email()
-        phone_number = fake.phone_number()
+        record = {
+            "name": fake.name(),
+            "age": str(fake.random_int(min=18, max=66)),
+            "city": fake.city(),
+            "email": fake.email(),
+            "phone": fake.phone_number()
+        }
 
         for key in generate:
-            if key == "shallow_list_based":
-                entry = {"name": name, "age": age, "city": city}
-            elif key == "shallow_list_based_obfuscated":
-                entry = {"name": "***", "age": age, "city": city}
-            elif key == "shallow_object_based":
-                entry = {"person": {"name": name, "age": age, "city": city}}
-            elif key == "shallow_object_based_obfuscated":
-                entry = {"person": {"name": "***", "age": age, "city": city}}
-            elif key == "deep_list_based":
-                entry = {
-                    "name": name,
-                    "age": age,
-                    "city": city,
-                    "contact": [{"email": email_address}, {"phone": phone_number}]
-                }
-            elif key == "deep_list_based_obfuscated":
-                entry = {
-                    "name": "***",
-                    "age": age,
-                    "city": city,
-                    "contact": [{"email": "***"}, {"phone": "***"}]
-                }
-            elif key == "deep_object_based":
-                entry = {"person": {
-                    "name": name,
-                    "age": age,
-                    "city": city,
-                    "contact": {
-                        "email": email_address,
-                        "phone": phone_number
-                    }
-                }}
-            elif key == "deep_object_based_obfuscated":
-                entry = {"person": {
-                    "name": "***",
-                    "age": age,
-                    "city": city,
-                    "contact": {
-                        "email": "***",
-                        "phone": "***"
-                    }
-                }}
-            elif key == "shallow_xml_str":
-                entry = (
-                    f"<person>"
-                    f"<name>{name}</name><age>{age}</age><city>{city}</city>"
-                    f"</person>")
-            elif key == "deep_xml_str":
-                entry = (
-                    f"<person>"
-                    f"<name>{name}</name><age>{age}</age><city>{city}</city>"
-                    f"<contact><email>{email_address}</email>"
-                    f"<phone>{phone_number}</phone></contact>"
-                    f"</person>")
-
+            entry = entry_generators[key](record)
             data[key].append(entry)
 
     return data
+
+
+entry_generators = {
+    "shallow_list_based": lambda data: {
+        "name": data["name"],
+        "age": data["age"],
+        "city": data["city"]
+    },
+    "shallow_list_based_obfuscated": lambda data: {
+        "name": "***",
+        "age": data["age"],
+        "city": data["city"]
+    },
+    "shallow_object_based": lambda data: {
+        "person": {
+            "name": data["name"],
+            "age": data["age"],
+            "city": data["city"]
+        }
+    },
+    "shallow_object_based_obfuscated": lambda data: {
+        "person": {
+            "name": "***",
+            "age": data["age"],
+            "city": data["city"]
+        }
+    },
+    "deep_list_based": lambda data: {
+        "name": data["name"],
+        "age": data["age"],
+        "city": data["city"],
+        "contact": [{"email": data["email"]}, {"phone": data["phone"]}]
+    },
+    "deep_list_based_obfuscated": lambda data: {
+        "name": "***",
+        "age": data["age"],
+        "city": data["city"],
+        "contact": [{"email": "***"}, {"phone": "***"}]
+    },
+    "deep_object_based": lambda data: {"person": {
+        "name": data["name"],
+        "age": data["age"],
+        "city": data["city"],
+        "contact": {
+            "email": data["email"],
+            "phone": data["phone"]
+        }
+    }},
+    "deep_object_based_obfuscated": lambda data: {"person": {
+        "name": "***",
+        "age": data["age"],
+        "city": data["city"],
+        "contact": {
+            "email": "***",
+            "phone": "***"
+        }
+    }},
+    "shallow_xml_str": lambda data: (
+        f"<person>"
+        f"<name>{data['name']}</name>"
+        f"<age>{data['age']}</age>"
+        f"<city>{data['city']}</city>"
+        f"</person>"
+    ),
+    "deep_xml_str": lambda data: (
+        f"<person>"
+        f"<name>{data['name']}</name>"
+        f"<age>{data['age']}</age>"
+        f"<city>{data['city']}</city>"
+        f"<contact>"
+        f"<email>{data['email']}</email>"
+        f"<phone>{data['phone']}</phone>"
+        f"</contact>"
+        f"</person>"
+    ), }
