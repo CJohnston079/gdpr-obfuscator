@@ -1,6 +1,5 @@
 import io
 import pickle
-import pytest
 from src.utils.serialise_dicts import serialise_dicts
 
 
@@ -59,7 +58,3 @@ class TestSerialiseDicts:
         deserialised_data = pickle.load(buffer)
 
         assert deserialised_data == data
-
-
-if __name__ == "__main__":  # pragma: no cover
-    pytest.main()

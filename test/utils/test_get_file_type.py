@@ -1,4 +1,3 @@
-import unittest
 from src.utils.get_file_type import get_file_type
 
 
@@ -40,7 +39,3 @@ class TestGetFileType():
     def test_handles_urls_with_fragments(self):
         result = get_file_type("s3://bucket/data/file.csv#section")
         assert result == "csv"
-
-
-if __name__ == "__main__":  # pragma: no cover
-    unittest.main()
