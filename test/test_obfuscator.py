@@ -1,26 +1,16 @@
-import unittest
 from unittest.mock import patch
+
+import pytest
 
 from src.obfuscator import obfuscator
 
 
-class TestObfuscator(unittest.TestCase):
-    def setUp(self):
-        self.original_data = [
-            {"name": "George", "age": "44", "city": "York"},
-            {"name": "Lindsay", "age": "40", "city": "Leeds"},
-            {"name": "Michael", "age": "37", "city": "Sheffield"},
-        ]
-        self.obfuscated_data = [
-            {"name": "***", "age": "***", "city": "York"},
-            {"name": "***", "age": "***", "city": "Leeds"},
-            {"name": "***", "age": "***", "city": "Sheffield"},
-        ]
-        self.serialized_data = """[
-            {"name": "***", "age": "***", "city": "York"},
-            {"name": "***", "age": "***", "city": "Leeds"},
-            {"name": "***", "age": "***", "city": "Sheffield"}
-        ]"""
+class TestObfuscator:
+    @pytest.fixture(autouse=True)
+    def setup(self, test_shallow_data):
+        self.original_data = test_shallow_data["shallow_list_based"]
+        self.obfuscated_data = test_shallow_data["shallow_list_based"]
+        self.serialized_data = f'{test_shallow_data["shallow_list_based"]}'
 
     @patch("src.obfuscator.serialise_dicts")
     @patch("src.obfuscator.obfuscate_fields")
@@ -46,7 +36,3 @@ class TestObfuscator(unittest.TestCase):
         mock_serialise_dicts.assert_called_once_with(self.obfuscated_data)
 
         assert result == self.serialized_data
-
-
-if __name__ == "__main__":  # pragma: no cover
-    unittest.main()

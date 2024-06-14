@@ -1,16 +1,14 @@
-import unittest
 from unittest.mock import patch
+
+import pytest
 
 from src.utils.get_data import get_data
 
 
-class TestGetData(unittest.TestCase):
-    def setUp(self):
-        self.sample_data = [
-            {"name": "George", "age": "44", "city": "York"},
-            {"name": "Lindsay", "age": "40", "city": "Leeds"},
-            {"name": "Michael", "age": "37", "city": "Sheffield"},
-        ]
+class TestGetData:
+    @pytest.fixture(autouse=True)
+    def setup(self, test_shallow_data):
+        self.data = test_shallow_data["shallow_list_based"]
 
     @patch("src.utils.get_data.handle_csv")
     @patch("src.utils.get_data.get_file_type")
@@ -65,22 +63,16 @@ class TestGetData(unittest.TestCase):
         self, mock_get_file_type, mock_handle_csv
     ):
         mock_get_file_type.return_value = "csv"
-        mock_handle_csv.return_value = self.sample_data
+        mock_handle_csv.return_value = self.data
         result = get_data("s3://bucket/data/file.csv")
 
-        assert result == self.sample_data
+        assert result == self.data
 
     @patch("src.utils.get_data.get_file_type")
     def test_get_data_handles_unsupported_file_type(self, mock_get_file_type):
         mock_get_file_type.return_value = "txt"
 
-        with self.assertRaises(ValueError) as context:
+        with pytest.raises(ValueError) as e:
             get_data("s3://bucket/data/file.txt")
 
-        self.assertEqual(
-            str(context.exception), "File type .txt is not supported."
-        )
-
-
-if __name__ == "__main__":  # pragma: no cover
-    unittest.main()
+        assert str(e.value) == "File type .txt is not supported."
