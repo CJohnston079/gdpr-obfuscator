@@ -50,3 +50,16 @@ class TestGetDataErrorHandling:
             obfuscator(event)
 
         assert str(e.value) == "File type .txt is not supported."
+
+    def test_raises_value_error_for_unknown_file_types(self):
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(ValueError) as e:
+            obfuscator(event)
+
+        assert str(e.value) == (
+            "Unable to get file extension from s3://bucket/data/file"
+        )
