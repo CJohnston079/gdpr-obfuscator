@@ -1,5 +1,6 @@
 import io
 import pickle
+
 from src.utils.serialise_dicts import serialise_dicts
 
 
@@ -46,10 +47,7 @@ class TestSerialiseDicts:
 
         assert deserialised_data == data
 
-    def test_serialises_deep_object_based_data(
-        self,
-        test_deep_data
-    ):
+    def test_serialises_deep_object_based_data(self, test_deep_data):
         data = test_deep_data["deep_dict_based"]
 
         serialised_data = serialise_dicts(data)

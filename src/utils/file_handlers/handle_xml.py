@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
+
 import boto3
-import io
 
 
 def handle_xml(file_path):

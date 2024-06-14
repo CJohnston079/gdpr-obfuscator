@@ -13,7 +13,7 @@ def generate_data(*generate, num_records=3):
             "age": str(fake.random_int(min=18, max=66)),
             "city": fake.city(),
             "email": fake.email(),
-            "phone": fake.phone_number()
+            "phone": fake.phone_number(),
         }
 
         for data_structure in generate:
@@ -23,7 +23,7 @@ def generate_data(*generate, num_records=3):
     for data_structure in data_structures:
         if data_structure.endswith("_xml_str"):
             xml_entries = "".join(data_structures[data_structure])
-            data_structures[data_structure] = f'<root>{xml_entries}</root>'
+            data_structures[data_structure] = f"<root>{xml_entries}</root>"
 
     return data_structures
 
@@ -32,57 +32,51 @@ entry_generators = {
     "shallow_list_based": lambda data: {
         "name": data["name"],
         "age": data["age"],
-        "city": data["city"]
+        "city": data["city"],
     },
     "shallow_list_based_obfuscated": lambda data: {
         "name": "***",
         "age": data["age"],
-        "city": data["city"]
+        "city": data["city"],
     },
     "shallow_dict_based": lambda data: {
         "person": {
             "name": data["name"],
             "age": data["age"],
-            "city": data["city"]
+            "city": data["city"],
         }
     },
     "shallow_dict_based_obfuscated": lambda data: {
-        "person": {
-            "name": "***",
-            "age": data["age"],
-            "city": data["city"]
-        }
+        "person": {"name": "***", "age": data["age"], "city": data["city"]}
     },
     "deep_list_based": lambda data: {
         "name": data["name"],
         "age": data["age"],
         "city": data["city"],
-        "contact": [{"email": data["email"]}, {"phone": data["phone"]}]
+        "contact": [{"email": data["email"]}, {"phone": data["phone"]}],
     },
     "deep_list_based_obfuscated": lambda data: {
         "name": "***",
         "age": data["age"],
         "city": data["city"],
-        "contact": [{"email": "***"}, {"phone": "***"}]
+        "contact": [{"email": "***"}, {"phone": "***"}],
     },
-    "deep_dict_based": lambda data: {"person": {
-        "name": data["name"],
-        "age": data["age"],
-        "city": data["city"],
-        "contact": {
-            "email": data["email"],
-            "phone": data["phone"]
+    "deep_dict_based": lambda data: {
+        "person": {
+            "name": data["name"],
+            "age": data["age"],
+            "city": data["city"],
+            "contact": {"email": data["email"], "phone": data["phone"]},
         }
-    }},
-    "deep_dict_based_obfuscated": lambda data: {"person": {
-        "name": "***",
-        "age": data["age"],
-        "city": data["city"],
-        "contact": {
-            "email": "***",
-            "phone": "***"
+    },
+    "deep_dict_based_obfuscated": lambda data: {
+        "person": {
+            "name": "***",
+            "age": data["age"],
+            "city": data["city"],
+            "contact": {"email": "***", "phone": "***"},
         }
-    }},
+    },
     "shallow_xml_str": lambda data: (
         f"<person>"
         f"<name>{data['name']}</name>"
@@ -100,4 +94,5 @@ entry_generators = {
         f"<phone>{data['phone']}</phone>"
         f"</contact>"
         f"</person>"
-    ), }
+    ),
+}

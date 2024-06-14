@@ -16,16 +16,15 @@ def obfuscate_fields(data, fields):
         list of dict: A new list of dictionaries where the targeted fields are
         replaced with "***".
     """
-
     obfuscated_data = []
 
     for record in data:
         obfuscated_record = {}
 
         for key, value in record.items():
-            if (isinstance(value, list)):
+            if isinstance(value, list):
                 obfuscated_record[key] = obfuscate_fields(value, fields)
-            elif (isinstance(value, dict)):
+            elif isinstance(value, dict):
                 obfuscated_record[key] = obfuscate_fields([value], fields)[0]
             else:
                 obfuscated_record[key] = "***" if key in fields else value

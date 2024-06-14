@@ -1,7 +1,7 @@
 from src.utils.get_file_type import get_file_type
 
 
-class TestGetFileType():
+class TestGetFileType:
     def test_returns_a_string(self):
         result = get_file_type("s3://bucket/data/file.csv")
         assert isinstance(result, str)

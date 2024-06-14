@@ -1,29 +1,24 @@
-import boto3
 import pytest
 
 from src.utils.file_handlers.handle_xml import handle_xml
 
 
-class TestHandleXML():
+class TestHandleXML:
     @pytest.fixture(scope="class", autouse=True)
     def set_up_s3_data(self, s3_bucket, test_xml_data):
         s3, bucket_name = s3_bucket
 
-        shallow_data = test_xml_data["shallow_dict_based"]
         shallow_xml_data = test_xml_data["shallow_xml_str"]
-        deep_data = test_xml_data["deep_dict_based"]
         deep_xml_data = test_xml_data["deep_xml_str"]
 
         s3.put_object(Bucket=bucket_name, Key="dir/empty-file.xml", Body="")
         s3.put_object(
             Bucket=bucket_name,
             Key="dir/shallow-data.xml",
-            Body=shallow_xml_data
+            Body=shallow_xml_data,
         )
         s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/deep-data.xml",
-            Body=deep_xml_data
+            Bucket=bucket_name, Key="dir/deep-data.xml", Body=deep_xml_data
         )
 
     def test_returns_list_of_dicts(self):

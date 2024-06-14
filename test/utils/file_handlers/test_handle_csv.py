@@ -1,10 +1,9 @@
-import boto3
 import pytest
 
 from src.utils.file_handlers.handle_csv import handle_csv
 
 
-class TestHandleCSV():
+class TestHandleCSV:
     @pytest.fixture(scope="class", autouse=True)
     def set_up_s3_data(self, s3_bucket, test_shallow_data):
         s3, bucket_name = s3_bucket
@@ -16,9 +15,7 @@ class TestHandleCSV():
 
         s3.put_object(Bucket=bucket_name, Key="dir/empty-file.csv", Body="")
         s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/test-csv.csv",
-            Body=csv_data
+            Bucket=bucket_name, Key="dir/test-csv.csv", Body=csv_data
         )
 
         return data

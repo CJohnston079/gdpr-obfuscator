@@ -1,6 +1,7 @@
 import csv
-import boto3
 import io
+
+import boto3
 
 
 def handle_csv(file_path):
@@ -9,8 +10,8 @@ def handle_csv(file_path):
     of dictionaries.
 
     Args:
-        file_path (str): The S3 bucket path to the CSV file to be read. The path
-            should be in the format "s3://bucket_name/path/to/file.csv".
+        file_path (str): The S3 bucket path to the CSV file to be read. The
+            path should be in the format "s3://bucket_name/path/to/file.csv".
 
     Returns:
         list:

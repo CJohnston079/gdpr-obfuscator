@@ -18,7 +18,7 @@ def get_file_type(file_path):
         "csv": "csv",
         "json": "json",
         "pqt": "parquet",
-        "parquet": "parquet"
+        "parquet": "parquet",
     }
 
     extension_pattern = r"\.(\w+)(?:\?.*|#.*)?$"

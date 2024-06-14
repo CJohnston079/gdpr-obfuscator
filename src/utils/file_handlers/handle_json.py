@@ -1,6 +1,6 @@
 import json
+
 import boto3
-import io
 
 
 def handle_json(file_path):
@@ -9,8 +9,8 @@ def handle_json(file_path):
     of dictionaries.
 
     Args:
-        file_path (str): The S3 bucket path to the JSON file to be read. The path
-            should be in the format "s3://bucket_name/path/to/file.json".
+        file_path (str): The S3 bucket path to the JSON file to be read. The
+            path should be in the format "s3://bucket_name/path/to/file.json".
 
     Returns:
         list:

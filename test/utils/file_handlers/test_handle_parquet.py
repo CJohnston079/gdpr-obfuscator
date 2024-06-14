@@ -1,10 +1,9 @@
-import boto3
-import pytest
+import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import pandas as pd
-
+import pytest
 from moto import mock_aws
+
 from src.utils.file_handlers.handle_parquet import handle_parquet
 
 
@@ -24,12 +23,10 @@ class TestHandleParquet:
         s3.put_object(
             Bucket=bucket_name,
             Key="dir/test_parquet.parquet",
-            Body=parquet_data
+            Body=parquet_data,
         )
         s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/test_pq.pq",
-            Body=parquet_data
+            Bucket=bucket_name, Key="dir/test_pq.pq", Body=parquet_data
         )
 
     def test_returns_list_of_dicts(self):
@@ -54,7 +51,7 @@ class TestHandleParquet:
         s3.put_object(
             Bucket=bucket_name,
             Key="dir/empty_parquet.parquet",
-            Body=empty_parquet_data
+            Body=empty_parquet_data,
         )
 
         result = handle_parquet("s3://test-bucket/dir/empty_parquet.parquet")
@@ -69,7 +66,3 @@ class TestHandleParquet:
         data = test_shallow_data["shallow_list_based"]
         result = handle_parquet("s3://test-bucket/dir/test_pq.pq")
         assert result == data
-
-
-if __name__ == "__main__":  # pragma: no cover
-    unittest.main()

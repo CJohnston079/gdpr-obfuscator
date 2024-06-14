@@ -1,16 +1,13 @@
 import json
-import boto3
+
 import pytest
 
-from moto import mock_aws
 from src.utils.file_handlers.handle_json import handle_json
 
 
 class TestHandleJSON:
     @pytest.fixture(scope="class", autouse=True)
-    def set_up_s3_data(
-        self, s3_bucket, test_shallow_data, test_deep_data
-    ):
+    def set_up_s3_data(self, s3_bucket, test_shallow_data, test_deep_data):
         s3, bucket_name = s3_bucket
         shallow_data = test_shallow_data["shallow_list_based"]
         deep_data = test_deep_data["deep_list_based"]
@@ -19,12 +16,12 @@ class TestHandleJSON:
         s3.put_object(
             Bucket=bucket_name,
             Key="test/shallowData.json",
-            Body=json.dumps(shallow_data)
+            Body=json.dumps(shallow_data),
         )
         s3.put_object(
             Bucket=bucket_name,
             Key="test/deepData.json",
-            Body=json.dumps(deep_data)
+            Body=json.dumps(deep_data),
         )
 
     def test_returns_list_of_dicts(self):

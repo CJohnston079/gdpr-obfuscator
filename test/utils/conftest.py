@@ -28,7 +28,7 @@ def test_xml_data():
         "shallow_dict_based",
         "shallow_xml_str",
         "deep_dict_based",
-        "deep_xml_str"
+        "deep_xml_str",
     )
 
     return data

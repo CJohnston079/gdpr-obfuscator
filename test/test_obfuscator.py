@@ -9,12 +9,12 @@ class TestObfuscator(unittest.TestCase):
         self.original_data = [
             {"name": "George", "age": "44", "city": "York"},
             {"name": "Lindsay", "age": "40", "city": "Leeds"},
-            {"name": "Michael", "age": "37", "city": "Sheffield"}
+            {"name": "Michael", "age": "37", "city": "Sheffield"},
         ]
         self.obfuscated_data = [
             {"name": "***", "age": "***", "city": "York"},
             {"name": "***", "age": "***", "city": "Leeds"},
-            {"name": "***", "age": "***", "city": "Sheffield"}
+            {"name": "***", "age": "***", "city": "Sheffield"},
         ]
         self.serialized_data = """[
             {"name": "***", "age": "***", "city": "York"},
@@ -26,10 +26,7 @@ class TestObfuscator(unittest.TestCase):
     @patch("src.obfuscator.obfuscate_fields")
     @patch("src.obfuscator.get_data")
     def test_obfuscator_calls_helper_functions(
-            self,
-            mock_get_data,
-            mock_obfuscate_fields,
-            mock_serialise_dicts
+        self, mock_get_data, mock_obfuscate_fields, mock_serialise_dicts
     ):
         mock_get_data.return_value = self.original_data
         mock_obfuscate_fields.return_value = self.obfuscated_data
@@ -37,14 +34,15 @@ class TestObfuscator(unittest.TestCase):
 
         event = {
             "file_to_obfuscate": "s3://bucket/data/file.csv",
-            "pii_fields": ["name", "age"]
+            "pii_fields": ["name", "age"],
         }
 
         result = obfuscator(event)
 
         mock_get_data.assert_called_once_with("s3://bucket/data/file.csv")
         mock_obfuscate_fields.assert_called_once_with(
-            self.original_data, event["pii_fields"])
+            self.original_data, event["pii_fields"]
+        )
         mock_serialise_dicts.assert_called_once_with(self.obfuscated_data)
 
         assert result == self.serialized_data

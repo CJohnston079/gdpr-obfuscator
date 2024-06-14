@@ -1,10 +1,8 @@
+from src.utils.file_handlers import handle_csv
+from src.utils.file_handlers import handle_json
+from src.utils.file_handlers import handle_parquet
+from src.utils.file_handlers import handle_xml
 from src.utils.get_file_type import get_file_type
-from src.utils.file_handlers import (
-    handle_csv,
-    handle_json,
-    handle_parquet,
-    handle_xml
-)
 
 
 def get_data(file_path):
@@ -29,7 +27,7 @@ def get_data(file_path):
         "csv": handle_csv,
         "json": handle_json,
         "parquet": handle_parquet,
-        "xml": handle_xml
+        "xml": handle_xml,
     }
 
     handler = handlers.get(file_type)
@@ -37,8 +35,6 @@ def get_data(file_path):
     if handler:
         data = handler(file_path)
     else:
-        raise ValueError(
-            f"File type .{file_type} is not supported."
-        )
+        raise ValueError(f"File type .{file_type} is not supported.")
 
     return data
