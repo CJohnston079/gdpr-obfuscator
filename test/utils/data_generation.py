@@ -19,6 +19,11 @@ def generate_data(*generate, num_records=3):
             entry = entry_generators[key](record)
             data[key].append(entry)
 
+    for key in data:
+        if key.endswith("_xml_str"):
+            xml_entries = "".join(data[key])
+            data[key] = f'<root>{xml_entries}</root>'
+
     return data
 
 

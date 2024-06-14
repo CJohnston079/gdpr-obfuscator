@@ -30,7 +30,5 @@ def test_xml_data():
         "deep_dict_based",
         "deep_xml_str"
     )
-    data["shallow_xml_str"] = f'<root>{data["shallow_xml_str"]}</root>'
-    data["deep_xml_str"] = f'<root>{data["deep_xml_str"]}</root>'
 
     return data
