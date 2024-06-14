@@ -1,76 +1,71 @@
-from unittest.mock import patch
-
 import pytest
 
 from src.utils.get_data import get_data
 
 
 class TestGetData:
-    @pytest.fixture(autouse=True)
-    def setup(self, test_shallow_data):
-        self.data = test_shallow_data["shallow_list_based"]
+    def test_get_data_calls_get_file_type(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        mocker.patch("src.utils.get_data.handle_csv")
 
-    @patch("src.utils.get_data.handle_csv")
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_calls_get_file_type(
-        self, mock_get_file_type, mock_handle_csv
-    ):
-        mock_get_file_type.return_value = "csv"
+        get_file_type.return_value = "csv"
         get_data("s3://bucket/data/file.csv")
-        mock_get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
 
-    @patch("src.utils.get_data.handle_csv")
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_calls_handle_csv_when_file_type_is_csv(
-        self, mock_get_file_type, mock_handle_csv
-    ):
-        mock_get_file_type.return_value = "csv"
+        get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
+
+    def test_get_data_calls_handle_csv_when_file_type_is_csv(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+
+        get_file_type.return_value = "csv"
         get_data("s3://bucket/data/file.csv")
-        mock_handle_csv.assert_called_once_with("s3://bucket/data/file.csv")
 
-    @patch("src.utils.get_data.handle_json")
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_calls_handle_csv_when_file_type_is_json(
-        self, mock_get_file_type, mock_handle_json
-    ):
-        mock_get_file_type.return_value = "json"
+        handle_csv.assert_called_once_with("s3://bucket/data/file.csv")
+
+    def test_get_data_calls_handle_csv_when_file_type_is_json(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_json = mocker.patch("src.utils.get_data.handle_json")
+
+        get_file_type.return_value = "json"
         get_data("s3://bucket/data/file.json")
-        mock_handle_json.assert_called_once_with("s3://bucket/data/file.json")
 
-    @patch("src.utils.get_data.handle_parquet")
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_calls_handle_csv_when_file_type_is_parquet(
-        self, mock_get_file_type, mock_handle_parquet
-    ):
-        mock_get_file_type.return_value = "parquet"
+        handle_json.assert_called_once_with("s3://bucket/data/file.json")
+
+    def test_get_data_calls_handle_csv_when_file_type_is_parquet(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_parquet = mocker.patch("src.utils.get_data.handle_parquet")
+
+        get_file_type.return_value = "parquet"
         get_data("s3://bucket/data/file.parquet")
-        mock_handle_parquet.assert_called_once_with(
-            "s3://bucket/data/file.parquet"
-        )
 
-    @patch("src.utils.get_data.handle_xml")
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_calls_handle_csv_when_file_type_is_xml(
-        self, mock_get_file_type, mock_handle_xml
-    ):
-        mock_get_file_type.return_value = "xml"
+        handle_parquet.assert_called_once_with("s3://bucket/data/file.parquet")
+
+    def test_get_data_calls_handle_csv_when_file_type_is_xml(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_xml = mocker.patch("src.utils.get_data.handle_xml")
+
+        get_file_type.return_value = "xml"
         get_data("s3://bucket/data/file.xml")
-        mock_handle_xml.assert_called_once_with("s3://bucket/data/file.xml")
 
-    @patch("src.utils.get_data.handle_csv")
-    @patch("src.utils.get_data.get_file_type")
+        handle_xml.assert_called_once_with("s3://bucket/data/file.xml")
+
     def test_get_data_calls_returns_expected_data(
-        self, mock_get_file_type, mock_handle_csv
+        self, mocker, test_shallow_data
     ):
-        mock_get_file_type.return_value = "csv"
-        mock_handle_csv.return_value = self.data
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+
+        get_file_type.return_value = "csv"
+        handle_csv.return_value = test_shallow_data["shallow_list_based"]
+
         result = get_data("s3://bucket/data/file.csv")
 
-        assert result == self.data
+        assert result == test_shallow_data["shallow_list_based"]
 
-    @patch("src.utils.get_data.get_file_type")
-    def test_get_data_handles_unsupported_file_type(self, mock_get_file_type):
-        mock_get_file_type.return_value = "txt"
+    def test_get_data_handles_unsupported_file_type(self, mocker):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+
+        get_file_type.return_value = "txt"
 
         with pytest.raises(ValueError) as e:
             get_data("s3://bucket/data/file.txt")
