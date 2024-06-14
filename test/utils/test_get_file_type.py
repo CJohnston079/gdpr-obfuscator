@@ -14,19 +14,11 @@ class TestGetFileType:
         result = get_file_type("s3://bucket/data/file.json")
         assert result == "json"
 
-    def test_returns_parquet_for_parquet_files(self):
-        short_file = get_file_type("s3://bucket/data/file.pqt")
-        long_file = get_file_type("s3://bucket/data/file.parquet")
-        assert short_file == "parquet"
-        assert long_file == "parquet"
-
-    def test_returns_none_for_unsupported_files(self):
-        result = get_file_type("s3://bucket/data/file.txt")
-        assert result is None
-
-    def test_handles_files_without_extension(self):
-        result = get_file_type("s3://bucket/data/file")
-        assert result is None
+    def test_returns_parquet_for_pq_and_parquet_files(self):
+        short_extension = get_file_type("s3://bucket/data/file.pq")
+        long_extension = get_file_type("s3://bucket/data/file.parquet")
+        assert short_extension == "parquet"
+        assert long_extension == "parquet"
 
     def test_handles_files_with_multiple_dots(self):
         result = get_file_type("s3://bucket/data/file.name.csv")
@@ -39,3 +31,11 @@ class TestGetFileType:
     def test_handles_urls_with_fragments(self):
         result = get_file_type("s3://bucket/data/file.csv#section")
         assert result == "csv"
+
+    def test_returns_none_for_unsupported_files(self):
+        result = get_file_type("s3://bucket/data/file.txt")
+        assert result is None
+
+    def test_handles_files_without_extension(self):
+        result = get_file_type("s3://bucket/data/file")
+        assert result is None

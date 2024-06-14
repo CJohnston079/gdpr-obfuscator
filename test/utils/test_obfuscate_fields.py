@@ -8,18 +8,15 @@ class TestObfuscateFields:
         data = test_shallow_data["shallow_list_based"]
         result = obfuscate_fields(data, ["name"])
 
-        assert isinstance(result, list), "Expected a list"
-        assert result, "The returned list is empty"
-        assert all(
-            isinstance(row, dict) for row in result
-        ), "Returned list should contain dictionaries"
+        assert isinstance(result, list)
+        assert all(isinstance(row, dict) for row in result)
 
     def test_input_data_not_mutated(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
         original_data = copy.deepcopy(data)
         obfuscate_fields(data, ["name"])
 
-        assert data == original_data, "Input data should not be mutated"
+        assert data == original_data
 
     def test_obfuscates_targeted_fields_in_shallow_data(
         self, test_shallow_data
