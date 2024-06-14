@@ -33,14 +33,14 @@ entry_generators = {
         "age": data["age"],
         "city": data["city"]
     },
-    "shallow_object_based": lambda data: {
+    "shallow_dict_based": lambda data: {
         "person": {
             "name": data["name"],
             "age": data["age"],
             "city": data["city"]
         }
     },
-    "shallow_object_based_obfuscated": lambda data: {
+    "shallow_dict_based_obfuscated": lambda data: {
         "person": {
             "name": "***",
             "age": data["age"],
@@ -59,7 +59,7 @@ entry_generators = {
         "city": data["city"],
         "contact": [{"email": "***"}, {"phone": "***"}]
     },
-    "deep_object_based": lambda data: {"person": {
+    "deep_dict_based": lambda data: {"person": {
         "name": data["name"],
         "age": data["age"],
         "city": data["city"],
@@ -68,7 +68,7 @@ entry_generators = {
             "phone": data["phone"]
         }
     }},
-    "deep_object_based_obfuscated": lambda data: {"person": {
+    "deep_dict_based_obfuscated": lambda data: {"person": {
         "name": "***",
         "age": data["age"],
         "city": data["city"],

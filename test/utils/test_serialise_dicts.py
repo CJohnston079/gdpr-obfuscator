@@ -51,7 +51,7 @@ class TestSerialiseDicts:
         self,
         test_deep_data
     ):
-        data = test_deep_data["deep_object_based"]
+        data = test_deep_data["deep_dict_based"]
 
         serialised_data = serialise_dicts(data)
 
