@@ -14,29 +14,29 @@ def generate_data(*generate, num_records=3):
         phone_number = fake.phone_number()
 
         for key in generate:
-            if "shallow_list_based" in key:
+            if key == "shallow_list_based":
                 entry = {"name": name, "age": age, "city": city}
-            elif "shallow_list_based_obfuscated" in key:
+            elif key == "shallow_list_based_obfuscated":
                 entry = {"name": "***", "age": age, "city": city}
-            elif "shallow_object_based" in key:
+            elif key == "shallow_object_based":
                 entry = {"person": {"name": name, "age": age, "city": city}}
-            elif "shallow_object_based_obfuscated" in key:
+            elif key == "shallow_object_based_obfuscated":
                 entry = {"person": {"name": "***", "age": age, "city": city}}
-            elif "deep_list_based" in key:
+            elif key == "deep_list_based":
                 entry = {
                     "name": name,
                     "age": age,
                     "city": city,
                     "contact": [{"email": email_address}, {"phone": phone_number}]
                 }
-            elif "deep_list_based_obfuscated" in key:
+            elif key == "deep_list_based_obfuscated":
                 entry = {
                     "name": "***",
                     "age": age,
                     "city": city,
                     "contact": [{"email": "***"}, {"phone": "***"}]
                 }
-            elif "deep_object_based" in key:
+            elif key == "deep_object_based":
                 entry = {"person": {
                     "name": name,
                     "age": age,
@@ -46,7 +46,7 @@ def generate_data(*generate, num_records=3):
                         "phone": phone_number
                     }
                 }}
-            elif "deep_object_based_obfuscated" in key:
+            elif key == "deep_object_based_obfuscated":
                 entry = {"person": {
                     "name": "***",
                     "age": age,
@@ -56,12 +56,12 @@ def generate_data(*generate, num_records=3):
                         "phone": "***"
                     }
                 }}
-            elif "shallow_xml_str" in key:
+            elif key == "shallow_xml_str":
                 entry = (
                     f"<person>"
                     f"<name>{name}</name><age>{age}</age><city>{city}</city>"
                     f"</person>")
-            elif "deep_xml_str" in key:
+            elif key == "deep_xml_str":
                 entry = (
                     f"<person>"
                     f"<name>{name}</name><age>{age}</age><city>{city}</city>"
