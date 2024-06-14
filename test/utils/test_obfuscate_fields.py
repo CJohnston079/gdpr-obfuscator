@@ -4,8 +4,9 @@ from src.utils.obfuscate_fields import obfuscate_fields
 
 
 class TestObfuscateFields():
-    def test_returns_list_of_dictionaries(self, ts_shallow_data):
-        shallow_data, obfc_shallow_data = ts_shallow_data
+    def test_returns_list_of_dictionaries(self, generate_shallow_data):
+        shallow_data = generate_shallow_data["shallow_list_based"]
+        obfc_shallow_data = generate_shallow_data["shallow_list_based_obfuscated"]
         result = obfuscate_fields(shallow_data, ["name"])
 
         assert isinstance(result, list), "Expected a list"
@@ -15,8 +16,8 @@ class TestObfuscateFields():
             for row in result
         ), "Returned list should contain dictionaries"
 
-    def test_input_data_not_mutated(self, ts_shallow_data):
-        shallow_data, obfc_shallow_data = ts_shallow_data
+    def test_input_data_not_mutated(self, generate_shallow_data):
+        shallow_data = generate_shallow_data["shallow_list_based"]
         original_data = copy.deepcopy(shallow_data)
         obfuscate_fields(shallow_data, ["name"])
 
@@ -24,24 +25,27 @@ class TestObfuscateFields():
             "Input data should not be mutated"
         )
 
-    def test_obfuscates_targeted_fields_in_shallow_data(self, ts_shallow_data):
-        shallow_data, obfc_shallow_data = ts_shallow_data
+    def test_obfuscates_targeted_fields_in_shallow_data(self, generate_shallow_data):
+        shallow_data = generate_shallow_data["shallow_list_based"]
+        obfc_shallow_data = generate_shallow_data["shallow_list_based_obfuscated"]
         result = obfuscate_fields(shallow_data, ["name"])
 
         assert result == obfc_shallow_data
 
     def test_obfuscates_targeted_fields_in_deep_array_based_data(
-        self, ts_deep_array_based_data
+        self, generate_deep_data
     ):
-        deep_data, obfc_deep_data = ts_deep_array_based_data
+        deep_data = generate_deep_data["deep_list_based"]
+        obfc_deep_data = generate_deep_data["deep_list_based_obfuscated"]
         result = obfuscate_fields(deep_data, ["name", "email", "phone"])
 
         assert result == obfc_deep_data
 
     def test_obfuscates_targeted_fields_in_deep_object_based_data(
-        self, ts_deep_object_based_data
+        self, generate_deep_data
     ):
-        deep_data, obfc_deep_data = ts_deep_object_based_data
+        deep_data = generate_deep_data["deep_list_based"]
+        obfc_deep_data = generate_deep_data["deep_list_based_obfuscated"]
         result = obfuscate_fields(deep_data, ["name", "email", "phone"])
 
         assert result == obfc_deep_data
