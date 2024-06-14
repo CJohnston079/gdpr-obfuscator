@@ -17,6 +17,26 @@ def generate_shallow_data():
     )
 
 
+@pytest.fixture(scope="class")
+def test_shallow_data(generate_shallow_data):
+    return generate_shallow_data["shallow_list_based"]
+
+
+@pytest.fixture(scope="session")
+def generate_deep_data():
+    return generate_data(
+        "deep_list_based",
+        "deep_list_based_obfuscated",
+        "deep_object_based",
+        "deep_object_based_obfuscated",
+    )
+
+
+@pytest.fixture(scope="class")
+def test_deep_data(generate_deep_data):
+    return generate_deep_data["deep_list_based"]
+
+
 @pytest.fixture(scope="session")
 def test_xml_data():
     data = generate_data(
@@ -29,11 +49,6 @@ def test_xml_data():
     data["deep_xml_str"] = f'<root>{data["deep_xml_str"]}</root>'
 
     return data
-
-
-@pytest.fixture(scope="class")
-def test_shallow_data(generate_shallow_data):
-    return generate_shallow_data["shallow_list_based"]
 
 
 @pytest.fixture(scope="class")

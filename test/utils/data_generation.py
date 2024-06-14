@@ -22,6 +22,20 @@ def generate_data(*generate, num_records=3):
                 entry = {"person": {"name": name, "age": age, "city": city}}
             elif "shallow_object_based_obfuscated" in key:
                 entry = {"person": {"name": "***", "age": age, "city": city}}
+            elif "deep_list_based" in key:
+                entry = {
+                    "name": name,
+                    "age": age,
+                    "city": city,
+                    "contact": [{"email": email_address}, {"phone": phone_number}]
+                }
+            elif "deep_list_based_obfuscated" in key:
+                entry = {
+                    "name": "***",
+                    "age": age,
+                    "city": city,
+                    "contact": [{"email": "***"}, {"phone": "***"}]
+                }
             elif "deep_object_based" in key:
                 entry = {"person": {
                     "name": name,
