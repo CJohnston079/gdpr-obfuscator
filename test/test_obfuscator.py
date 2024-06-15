@@ -39,6 +39,22 @@ class TestObfuscator:
         assert result == self.serialized_data
 
 
+class TestObfuscatorErrorHandling:
+    def test_raises_generic_exception(self, mocker):
+        get_data = mocker.patch("src.obfuscator.get_data")
+        get_data.side_effect = Exception
+
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.txt",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(Exception) as e:
+            obfuscator(event)
+
+        assert str(e.value) == "An unknown error occurred."
+
+
 class TestGetDataErrorHandling:
     def test_raises_value_error_for_unsupported_file_types(self):
         event = {
