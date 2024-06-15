@@ -62,6 +62,9 @@ class TestGetData:
 
         assert result == test_shallow_data["shallow_list_based"]
 
+
+@pytest.mark.error_handling
+class TestGetDataErrorHandling:
     def test_get_data_handles_unsupported_file_type(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
 

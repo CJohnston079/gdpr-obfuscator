@@ -35,6 +35,7 @@ class TestGetFileType:
         assert result == "csv"
 
 
+@pytest.mark.error_handling
 class TestGetFileTypeErrorHandling:
     def test_handles_files_without_extension(self):
         with pytest.raises(ValueError) as e:

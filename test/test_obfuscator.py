@@ -31,14 +31,13 @@ class TestObfuscator:
         result = obfuscator(event)
 
         get_data.assert_called_once_with("s3://bucket/data/file.csv")
-        obfuscate_fields.assert_called_once_with(
-            self.original_data, event["pii_fields"]
-        )
+        obfuscate_fields.assert_called_once_with(self.original_data, ["name"])
         serialise_dicts.assert_called_once_with(self.obfuscated_data)
 
         assert result == self.serialized_data
 
 
+@pytest.mark.error_handling
 class TestObfuscatorErrorHandling:
     def test_raises_generic_exception(self, mocker):
         get_data = mocker.patch("src.obfuscator.get_data")
@@ -55,6 +54,7 @@ class TestObfuscatorErrorHandling:
         assert str(e.value) == "An unknown error occurred."
 
 
+@pytest.mark.error_handling
 class TestGetDataErrorHandling:
     def test_raises_value_error_for_unsupported_file_types(self):
         event = {
