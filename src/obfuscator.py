@@ -14,7 +14,9 @@ def obfuscator(event):
 
         return serialized_data
 
-    except ValueError as ve:
-        raise ValueError(ve) from ve
+    except TypeError as e:
+        raise TypeError(e) from e
+    except AttributeError as e:
+        raise AttributeError(e) from e
     except Exception:
         raise Exception("An unknown error occurred.")

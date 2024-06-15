@@ -38,7 +38,7 @@ class TestGetFileType:
 @pytest.mark.error_handling
 class TestGetFileTypeErrorHandling:
     def test_handles_files_without_extension(self):
-        with pytest.raises(ValueError) as e:
+        with pytest.raises(AttributeError) as e:
             get_file_type("s3://bucket/data/file")
 
         assert str(e.value) == (

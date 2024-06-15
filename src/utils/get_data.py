@@ -19,23 +19,23 @@ def get_data(file_path):
               from each row.
 
     Raises:
-        ValueError: If no function exists to handle the file_type
+        TypeError: If no function exists to handle the file_type
     """
-    file_type = get_file_type(file_path)
+    try:
+        file_type = get_file_type(file_path)
 
-    handlers = {
-        "csv": handle_csv,
-        "json": handle_json,
-        "pqt": handle_parquet,
-        "parquet": handle_parquet,
-        "xml": handle_xml,
-    }
+        handlers = {
+            "csv": handle_csv,
+            "json": handle_json,
+            "pqt": handle_parquet,
+            "parquet": handle_parquet,
+            "xml": handle_xml,
+        }
 
-    handler = handlers.get(file_type)
-
-    if handler:
+        handler = handlers.get(file_type)
         data = handler(file_path)
-    else:
-        raise ValueError(f"File type .{file_type} is not supported.")
 
-    return data
+        return data
+
+    except TypeError:
+        raise TypeError(f"File type .{file_type} is not supported.")

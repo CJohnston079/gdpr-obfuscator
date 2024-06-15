@@ -12,14 +12,18 @@ def get_file_type(file_path):
         str or None: The file type corresponding to the file extension found
         in the file path, or None if the file type is not supported or no
         extesion is found.
+
+    Raises:
+        AttributeError: If unable to retrieve extension from file path.
     """
 
-    extension_pattern = r"\.(\w+)(?:\?.*|#.*)?$"
-    extension = re.search(extension_pattern, file_path)
+    try:
+        extension_pattern = r"\.(\w+)(?:\?.*|#.*)?$"
+        extension = re.search(extension_pattern, file_path)
 
-    if extension:
         file_type = extension.group(1)
-    else:
-        raise ValueError(f"Unable to get file extension from {file_path}")
 
-    return file_type
+        return file_type
+
+    except AttributeError:
+        raise AttributeError(f"Unable to get file extension from {file_path}")

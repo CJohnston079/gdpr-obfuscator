@@ -62,7 +62,7 @@ class TestGetDataErrorHandling:
             "pii_fields": ["name"],
         }
 
-        with pytest.raises(ValueError) as e:
+        with pytest.raises(TypeError) as e:
             obfuscator(event)
 
         assert str(e.value) == "File type .txt is not supported."
@@ -73,7 +73,7 @@ class TestGetDataErrorHandling:
             "pii_fields": ["name"],
         }
 
-        with pytest.raises(ValueError) as e:
+        with pytest.raises(AttributeError) as e:
             obfuscator(event)
 
         assert str(e.value) == (
