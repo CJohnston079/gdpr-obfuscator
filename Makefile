@@ -56,6 +56,9 @@ unit-test:
 check-coverage:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} coverage run --omit 'venv/*' -m pytest && coverage report -m)
 
+mark-test-error-handling:
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
+
 pre-commit:
 	$(call execute_in_env, pre-commit run --all-files)
 
