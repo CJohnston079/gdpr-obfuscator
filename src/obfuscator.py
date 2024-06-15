@@ -16,3 +16,5 @@ def obfuscator(event):
 
     except ValueError as ve:
         raise ValueError(ve) from ve
+    except Exception:
+        raise Exception("An unknown error occurred.")
