@@ -24,6 +24,8 @@ def get_data(file_path):
     """
     try:
         file_type = get_file_type(file_path)
+        bucket = file_path.split("/")[2]
+        key = "/".join(file_path.split("/")[3:])
 
         handlers = {
             "csv": handle_csv,
@@ -34,7 +36,7 @@ def get_data(file_path):
         }
 
         handler = handlers.get(file_type)
-        data = handler(file_path)
+        data = handler(bucket, key)
 
         return data
 

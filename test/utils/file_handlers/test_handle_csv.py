@@ -21,20 +21,20 @@ class TestHandleCSV:
         return data
 
     def test_returns_list_of_dicts(self):
-        result = handle_csv("s3://test-bucket/dir/test-csv.csv")
+        result = handle_csv("test-bucket", "dir/test-csv.csv")
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, set_up_s3_data):
         data = set_up_s3_data
-        result = handle_csv("s3://test-bucket/dir/test-csv.csv")
+        result = handle_csv("test-bucket", "dir/test-csv.csv")
         assert len(result) == len(data)
 
     def test_returns_empty_list_when_passed_empty_file(self):
-        result = handle_csv("s3://test-bucket/dir/empty-file.csv")
+        result = handle_csv("test-bucket", "dir/empty-file.csv")
         assert result == []
 
     def test_returns_expected_data(self, set_up_s3_data):
         data = set_up_s3_data
-        result = handle_csv("s3://test-bucket/dir/test-csv.csv")
+        result = handle_csv("test-bucket", "dir/test-csv.csv")
         assert result == data

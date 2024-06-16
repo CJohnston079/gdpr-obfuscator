@@ -4,7 +4,7 @@ import boto3
 import pyarrow.parquet as pq
 
 
-def handle_parquet(file_path):
+def handle_parquet(bucket, key):
     """
     Reads the contents of a Parquet file from an AWS S3 bucket and returns a
     list of dictionaries.
@@ -21,13 +21,9 @@ def handle_parquet(file_path):
             column headers and the values are the corresponding values from
             each row in the Parquet file.
     """
-
-    bucket_name = file_path.split("/")[2]
-    key = "/".join(file_path.split("/")[3:])
-
     s3 = boto3.client("s3", region_name="eu-west-2")
 
-    response = s3.get_object(Bucket=bucket_name, Key=key)
+    response = s3.get_object(Bucket=bucket, Key=key)
     content = response["Body"].read()
     file_content = io.BytesIO(content)
 

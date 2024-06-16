@@ -21,7 +21,7 @@ class TestGetData:
         get_file_type.return_value = "csv"
         get_data("s3://bucket/data/file.csv")
 
-        handle_csv.assert_called_once_with("s3://bucket/data/file.csv")
+        handle_csv.assert_called_once_with("bucket", "data/file.csv")
 
     def test_get_data_calls_handle_csv_when_file_type_is_json(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
@@ -30,7 +30,7 @@ class TestGetData:
         get_file_type.return_value = "json"
         get_data("s3://bucket/data/file.json")
 
-        handle_json.assert_called_once_with("s3://bucket/data/file.json")
+        handle_json.assert_called_once_with("bucket", "data/file.json")
 
     def test_get_data_calls_handle_csv_when_file_type_is_parquet(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
@@ -39,7 +39,7 @@ class TestGetData:
         get_file_type.return_value = "parquet"
         get_data("s3://bucket/data/file.parquet")
 
-        handle_parquet.assert_called_once_with("s3://bucket/data/file.parquet")
+        handle_parquet.assert_called_once_with("bucket", "data/file.parquet")
 
     def test_get_data_calls_handle_csv_when_file_type_is_xml(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
@@ -48,7 +48,7 @@ class TestGetData:
         get_file_type.return_value = "xml"
         get_data("s3://bucket/data/file.xml")
 
-        handle_xml.assert_called_once_with("s3://bucket/data/file.xml")
+        handle_xml.assert_called_once_with("bucket", "data/file.xml")
 
     def test_get_data_calls_returns_expected_data(
         self, mocker, test_shallow_data

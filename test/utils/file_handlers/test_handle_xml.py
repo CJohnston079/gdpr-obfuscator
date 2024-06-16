@@ -22,26 +22,26 @@ class TestHandleXML:
         )
 
     def test_returns_list_of_dicts(self):
-        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
+        result = handle_xml("test-bucket", "dir/shallow-data.xml")
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, test_xml_data):
         shallow_data = test_xml_data["shallow_dict_based"]
-        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
+        result = handle_xml("test-bucket", "dir/shallow-data.xml")
         assert len(result) == len(shallow_data)
 
     def test_returns_empty_list_when_passed_empty_file(self):
-        result = handle_xml("s3://test-bucket/dir/empty-file.xml")
+        result = handle_xml("test-bucket", "dir/empty-file.xml")
         assert result == []
 
     def test_returns_expected_shallow_data(self, test_xml_data):
         shallow_data = test_xml_data["shallow_dict_based"]
-        result = handle_xml("s3://test-bucket/dir/shallow-data.xml")
+        result = handle_xml("test-bucket", "dir/shallow-data.xml")
 
         assert result == shallow_data
 
     def test_returns_expected_deep_data(self, test_xml_data):
         deep_data = test_xml_data["deep_dict_based"]
-        result = handle_xml("s3://test-bucket/dir/deep-data.xml")
+        result = handle_xml("test-bucket", "dir/deep-data.xml")
         assert result == deep_data
