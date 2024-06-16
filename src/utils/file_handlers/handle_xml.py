@@ -9,8 +9,8 @@ def handle_xml(bucket, key):
     list of dictionaries of the same structure as the XML file.
 
     Args:
-        file_path (str): The S3 bucket path to the XML file to be read. The
-            path should be in the format "s3://bucket_name/path/to/file.xml".
+        bucket (str): The name of S3 bucket in which the XML file is located.
+        key (str): The file path of the XML file within its bucket.
 
     Returns:
         list:

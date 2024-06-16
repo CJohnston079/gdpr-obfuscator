@@ -10,8 +10,8 @@ def handle_csv(bucket, key):
     of dictionaries.
 
     Args:
-        file_path (str): The S3 bucket path to the CSV file to be read. The
-            path should be in the format "s3://bucket_name/path/to/file.csv".
+        bucket (str): The name of S3 bucket in which the CSV file is located.
+        key (str): The file path of the CSV file within its bucket.
 
     Returns:
         list:

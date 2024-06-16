@@ -10,9 +10,8 @@ def handle_parquet(bucket, key):
     list of dictionaries.
 
     Args:
-        file_path (str): The S3 bucket path to the Parquet file to be read.
-        file_path should be in the format "s3://bucket_name/path/to/file.pq"
-        or "s3://bucket_name/path/to/file.parquet".
+        bucket (str): The name of S3 bucket where the Parquet file is located.
+        key (str): The file path of the Parquet file within its bucket.
 
     Returns:
         list:

@@ -9,8 +9,8 @@ def handle_json(bucket, key):
     of dictionaries.
 
     Args:
-        file_path (str): The S3 bucket path to the JSON file to be read. The
-            path should be in the format "s3://bucket_name/path/to/file.json".
+        bucket (str): The name of S3 bucket in which the JSON file is located.
+        key (str): The file path of the JSON file within its bucket.
 
     Returns:
         list:
