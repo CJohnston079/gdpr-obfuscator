@@ -1,5 +1,7 @@
 import logging
 
+from botocore.exceptions import ClientError
+
 from src.exceptions import GetDataError
 from src.utils.get_data import get_data
 from src.utils.obfuscate_fields import obfuscate_fields
@@ -21,9 +23,11 @@ def obfuscator(event):
 
         return serialized_data
 
-    except GetDataError as get_data_error:
-        logger.error(f"Error loading data from {file_path}", exc_info=True)
-        raise get_data_error
+    except (GetDataError, ClientError, TypeError) as e:
+        logger.error(
+            f"Error loading data from {file_path}: {e}", exc_info=True
+        )
+        raise e
     except Exception as e:
         logger.critical("An unexpected error occurred", exc_info=True)
         raise e

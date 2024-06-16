@@ -1,4 +1,4 @@
-import logging
+from botocore.exceptions import ClientError
 
 from src.exceptions import GetDataError
 from src.utils.file_handlers import handle_csv
@@ -6,10 +6,6 @@ from src.utils.file_handlers import handle_json
 from src.utils.file_handlers import handle_parquet
 from src.utils.file_handlers import handle_xml
 from src.utils.get_file_type import get_file_type
-
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 
 def get_data(file_path):
@@ -51,5 +47,20 @@ def get_data(file_path):
 
     except TypeError:
         raise
+    except ClientError as e:
+        error_code = e.response["Error"]["Code"]
+        if error_code == "NoSuchKey":
+            raise FileNotFoundError(
+                f"The file at {file_path} was not found in S3."
+            )
+        elif error_code == "AccessDenied":
+            raise PermissionError(
+                f"Permission denied for file {file_path} in S3."
+            )
+        else:
+            raise OSError(
+                f"An error occurred while accessing file {file_path} in S3: "
+                f"{e}"
+            )
     except Exception as e:
         raise GetDataError(e)
