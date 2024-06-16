@@ -43,6 +43,6 @@ class TestGetFileTypeErrorHandling:
             get_file_type("s3://bucket/data/file")
 
         assert str(e.value) == (
-            "FileTypeExtractionError: Unable to get file extension from "
+            "FileTypeExtractionError: unable to get file extension from "
             "s3://bucket/data/file"
         )

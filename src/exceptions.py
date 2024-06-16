@@ -3,5 +3,5 @@ class FileTypeExtractionError(Exception):
         self.file_path = file_path
         super().__init__(
             "FileTypeExtractionError: "
-            f"Unable to get file extension from {file_path}"
+            f"unable to get file extension from {file_path}"
         )

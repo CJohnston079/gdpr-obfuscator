@@ -85,11 +85,11 @@ class TestObfuscatorGetFileTypeErrorHandling:
 
         assert (
             str(e.value)
-            == "FileTypeExtractionError: Unable to get file extension from "
+            == "FileTypeExtractionError: unable to get file extension from "
             "s3://bucket/data/file"
         )
         assert (
             "Error fetching data from s3://bucket/data/file: "
-            "FileTypeExtractionError: Unable to get file extension from "
+            "FileTypeExtractionError: unable to get file extension from "
             "s3://bucket/data/file" in caplog.text
         )
