@@ -1,4 +1,5 @@
 import pytest
+from botocore.exceptions import ClientError
 
 from src.exceptions import GetDataError
 from src.utils.get_data import get_data
@@ -82,4 +83,39 @@ class TestGetDataErrorHandling:
 
         file_path = "s3://bucket/data/file.csv"
         with pytest.raises(GetDataError):
+            get_data(file_path)
+
+
+@pytest.mark.error_handling
+class TestClientErrorResponses:
+    @pytest.mark.parametrize(
+        "file_path, exception",
+        [
+            ("s3://test-bucket/missing_file.csv", FileNotFoundError),
+            ("s3://test-bucket/protected_file.csv", PermissionError),
+            ("s3://test-bucket/other_file.csv", IOError),
+            ("s3://test-bucket/invalid_data.csv", GetDataError),
+        ],
+    )
+    def test_get_data_client_errors(self, mocker, file_path, exception):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+        get_file_type.return_value = "csv"
+
+        if exception == FileNotFoundError:
+            handle_csv.side_effect = ClientError(
+                {"Error": {"Code": "NoSuchKey"}}, "operation_name"
+            )
+        elif exception == PermissionError:
+            handle_csv.side_effect = ClientError(
+                {"Error": {"Code": "AccessDenied"}}, "operation_name"
+            )
+        elif exception == IOError:
+            handle_csv.side_effect = ClientError(
+                {"Error": {"Code": "OtherError"}}, "operation_name"
+            )
+        elif exception == GetDataError:
+            handle_csv.side_effect = ValueError("Invalid CSV")
+
+        with pytest.raises(exception):
             get_data(file_path)
