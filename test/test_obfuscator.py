@@ -56,35 +56,33 @@ class TestObfuscatorErrorHandling:
 
 
 @pytest.mark.error_handling
-class TestObfuscatorGetDataErrorHandling:
-    def test_raises_unsupported_file_for_unsupported_file_types(self, caplog):
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file.txt",
-            "pii_fields": ["name"],
-        }
-
+class TestObfuscatorHandlesGetDataError:
+    @pytest.mark.parametrize(
+        "event, expected_message",
+        [
+            (
+                {
+                    "file_to_obfuscate": "s3://bucket/data/file.txt",
+                    "pii_fields": ["name"],
+                },
+                "GetDataError: error fetching data from "
+                "s3://bucket/data/file.txt: "
+                "UnsupportedFile: file type .txt is not supported.",
+            ),
+            (
+                {
+                    "file_to_obfuscate": "s3://bucket/data/file",
+                    "pii_fields": ["name"],
+                },
+                "GetDataError: error fetching data from "
+                "s3://bucket/data/file: "
+                "FileTypeExtractionError: unable to get file extension from "
+                "s3://bucket/data/file",
+            ),
+        ],
+    )
+    def test_handles_get_data_errors(self, event, expected_message, caplog):
         with pytest.raises(GetDataError):
             obfuscator(event)
 
-        assert (
-            "GetDataError: "
-            "error fetching data from s3://bucket/data/file.txt: "
-            "UnsupportedFile: file type .txt is not supported." in caplog.text
-        )
-
-    def test_raises_file_type_extraction_error_for_unknown_file_types(
-        self, caplog
-    ):
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file",
-            "pii_fields": ["name"],
-        }
-
-        with pytest.raises(GetDataError):
-            obfuscator(event)
-
-        assert (
-            "GetDataError: error fetching data from s3://bucket/data/file: "
-            "FileTypeExtractionError: unable to get file extension from "
-            "s3://bucket/data/file" in caplog.text
-        )
+        assert expected_message in caplog.text
