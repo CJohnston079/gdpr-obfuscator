@@ -1,9 +1,15 @@
-from src.exceptions import UnsupportedFile
+import logging
+
+from src.exceptions import GetDataError
 from src.utils.file_handlers import handle_csv
 from src.utils.file_handlers import handle_json
 from src.utils.file_handlers import handle_parquet
 from src.utils.file_handlers import handle_xml
 from src.utils.get_file_type import get_file_type
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 def get_data(file_path):
@@ -14,13 +20,12 @@ def get_data(file_path):
         file_path (str): The path to the file to be read.
 
     Returns:
-        list: A list of dictionaries representing the data in the file.
-              Each dictionary contains key-value pairs where the keys are
-              column headers and the values are the corresponding values
-              from each row.
+        list: A list of dictionaries representing the data structure in
+            the file.
 
     Raises:
-        UnsupportedFile: If no function exists to handle file_type
+        TypeError: If no function exists to handle file_type.
+        GetDataError: If any other Exception is raised.
     """
     try:
         file_type = get_file_type(file_path)
@@ -36,9 +41,15 @@ def get_data(file_path):
         }
 
         handler = handlers.get(file_type)
+
+        if handler is None:
+            raise TypeError(f"file type .{file_type} is not supported")
+
         data = handler(bucket, key)
 
         return data
 
     except TypeError:
-        raise UnsupportedFile(file_type)
+        raise
+    except Exception as e:
+        raise GetDataError(e)

@@ -56,35 +56,18 @@ class TestObfuscatorErrorHandling:
         assert any(record.levelname == "CRITICAL" for record in caplog.records)
 
 
-@pytest.mark.xfail
 @pytest.mark.error_handling
 class TestObfuscatorHandlesGetDataError:
-    @pytest.mark.parametrize(
-        "event, expected_message",
-        [
-            (
-                {
-                    "file_to_obfuscate": "s3://bucket/data/file.txt",
-                    "pii_fields": ["name"],
-                },
-                "GetDataError: error fetching data from "
-                "s3://bucket/data/file.txt: "
-                "UnsupportedFile: file type .txt is not supported.",
-            ),
-            (
-                {
-                    "file_to_obfuscate": "s3://bucket/data/file",
-                    "pii_fields": ["name"],
-                },
-                "GetDataError: error fetching data from "
-                "s3://bucket/data/file: "
-                "FileTypeExtractionError: unable to get file extension from "
-                "s3://bucket/data/file",
-            ),
-        ],
-    )
-    def test_handles_get_data_errors(self, event, expected_message, caplog):
+    def test_raises_get_data_error(self, mocker, caplog):
+        get_data_mock = mocker.patch("src.obfuscator.get_data")
+        get_data_mock.side_effect = GetDataError("Error loading data")
+
+        event = {
+            "file_to_obfuscate": "s3://erroneous-file",
+            "pii_fields": ["name"],
+        }
+
         with pytest.raises(GetDataError):
             obfuscator(event)
 
-        assert expected_message in caplog.text
+        assert "Error loading data from" in caplog.text

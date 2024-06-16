@@ -1,6 +1,6 @@
 import pytest
 
-from src.exceptions import UnsupportedFile
+from src.exceptions import GetDataError
 from src.utils.get_data import get_data
 
 
@@ -71,9 +71,15 @@ class TestGetDataErrorHandling:
 
         get_file_type.return_value = "txt"
 
-        with pytest.raises(UnsupportedFile) as e:
+        with pytest.raises(TypeError) as e:
             get_data("s3://bucket/data/file.txt")
 
-        assert str(e.value) == (
-            "UnsupportedFile: file type .txt is not supported."
-        )
+        assert str(e.value) == ("file type .txt is not supported")
+
+    def test_raises_get_data_error_for_caught_exceptions(self, mocker, caplog):
+        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
+        get_file_type.side_effect = Exception
+
+        file_path = "s3://bucket/data/file.csv"
+        with pytest.raises(GetDataError):
+            get_data(file_path)

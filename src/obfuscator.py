@@ -1,7 +1,6 @@
 import logging
 
 from src.exceptions import GetDataError
-from src.exceptions import UnsupportedFile
 from src.utils.get_data import get_data
 from src.utils.obfuscate_fields import obfuscate_fields
 from src.utils.serialise_dicts import serialise_dicts
@@ -22,8 +21,9 @@ def obfuscator(event):
 
         return serialized_data
 
-    except UnsupportedFile as e:
-        raise GetDataError(file_path, e)
+    except GetDataError as get_data_error:
+        logger.error(f"Error loading data from {file_path}", exc_info=True)
+        raise get_data_error
     except Exception as e:
         logger.critical("An unexpected error occurred", exc_info=True)
         raise e
