@@ -1,5 +1,6 @@
 import pytest
 
+from src.exceptions import UnsupportedFile
 from src.utils.get_data import get_data
 
 
@@ -70,7 +71,9 @@ class TestGetDataErrorHandling:
 
         get_file_type.return_value = "txt"
 
-        with pytest.raises(TypeError) as e:
+        with pytest.raises(UnsupportedFile) as e:
             get_data("s3://bucket/data/file.txt")
 
-        assert str(e.value) == "File type .txt is not supported."
+        assert str(e.value) == (
+            "UnsupportedFile: file type .txt is not supported."
+        )

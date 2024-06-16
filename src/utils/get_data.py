@@ -1,3 +1,4 @@
+from src.exceptions import UnsupportedFile
 from src.utils.file_handlers import handle_csv
 from src.utils.file_handlers import handle_json
 from src.utils.file_handlers import handle_parquet
@@ -19,7 +20,7 @@ def get_data(file_path):
               from each row.
 
     Raises:
-        TypeError: If no function exists to handle the file_type
+        UnsupportedFile: If no function exists to handle file_type
     """
     try:
         file_type = get_file_type(file_path)
@@ -38,4 +39,4 @@ def get_data(file_path):
         return data
 
     except TypeError:
-        raise TypeError(f"File type .{file_type} is not supported.")
+        raise UnsupportedFile(file_type)
