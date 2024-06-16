@@ -1,7 +1,6 @@
 import pytest
 
-from src.exceptions import FileTypeExtractionError
-from src.exceptions import UnsupportedFile
+from src.exceptions import GetDataError
 from src.obfuscator import obfuscator
 
 
@@ -57,21 +56,19 @@ class TestObfuscatorErrorHandling:
 
 
 @pytest.mark.error_handling
-class TestObfuscatorGetFileTypeErrorHandling:
+class TestObfuscatorGetDataErrorHandling:
     def test_raises_unsupported_file_for_unsupported_file_types(self, caplog):
         event = {
             "file_to_obfuscate": "s3://bucket/data/file.txt",
             "pii_fields": ["name"],
         }
 
-        with pytest.raises(UnsupportedFile) as e:
+        with pytest.raises(GetDataError):
             obfuscator(event)
 
-        assert str(e.value) == (
-            "UnsupportedFile: file type .txt is not supported."
-        )
         assert (
-            "Error fetching data from s3://bucket/data/file.txt: "
+            "GetDataError: "
+            "error fetching data from s3://bucket/data/file.txt: "
             "UnsupportedFile: file type .txt is not supported." in caplog.text
         )
 
@@ -83,15 +80,11 @@ class TestObfuscatorGetFileTypeErrorHandling:
             "pii_fields": ["name"],
         }
 
-        with pytest.raises(FileTypeExtractionError) as e:
+        with pytest.raises(GetDataError):
             obfuscator(event)
 
-        assert str(e.value) == (
-            "FileTypeExtractionError: unable to get file extension from "
-            "s3://bucket/data/file"
-        )
         assert (
-            "Error fetching data from s3://bucket/data/file: "
+            "GetDataError: error fetching data from s3://bucket/data/file: "
             "FileTypeExtractionError: unable to get file extension from "
             "s3://bucket/data/file" in caplog.text
         )
