@@ -1,5 +1,7 @@
 import re
 
+from src.exceptions import FileTypeExtractionError
+
 
 def get_file_type(file_path):
     """
@@ -26,4 +28,4 @@ def get_file_type(file_path):
         return file_type
 
     except AttributeError:
-        raise AttributeError(f"Unable to get file extension from {file_path}")
+        raise FileTypeExtractionError(file_path)
