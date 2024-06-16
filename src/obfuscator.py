@@ -1,6 +1,5 @@
 import logging
 
-from src.exceptions import FileTypeExtractionError
 from src.exceptions import GetDataError
 from src.exceptions import UnsupportedFile
 from src.utils.get_data import get_data
@@ -23,7 +22,7 @@ def obfuscator(event):
 
         return serialized_data
 
-    except (FileTypeExtractionError, UnsupportedFile) as e:
+    except UnsupportedFile as e:
         raise GetDataError(file_path, e)
     except Exception as e:
         logger.critical("An unexpected error occurred", exc_info=True)

@@ -1,6 +1,5 @@
 import pytest
 
-from src.utils.get_file_type import FileTypeExtractionError
 from src.utils.get_file_type import get_file_type
 
 
@@ -39,10 +38,9 @@ class TestGetFileType:
 @pytest.mark.error_handling
 class TestGetFileTypeErrorHandling:
     def test_handles_files_without_extension(self):
-        with pytest.raises(FileTypeExtractionError) as e:
+        with pytest.raises(AttributeError) as e:
             get_file_type("s3://bucket/data/file")
 
         assert str(e.value) == (
-            "FileTypeExtractionError: unable to get file extension from "
-            "s3://bucket/data/file"
+            "unable to get file extension from s3://bucket/data/file"
         )
