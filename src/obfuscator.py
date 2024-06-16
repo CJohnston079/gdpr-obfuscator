@@ -1,9 +1,15 @@
+import logging
+
 from src.exceptions import FileTypeExtractionError
 from src.exceptions import GetDataError
 from src.exceptions import UnsupportedFile
 from src.utils.get_data import get_data
 from src.utils.obfuscate_fields import obfuscate_fields
 from src.utils.serialise_dicts import serialise_dicts
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 def obfuscator(event):
@@ -19,5 +25,6 @@ def obfuscator(event):
 
     except (FileTypeExtractionError, UnsupportedFile) as e:
         raise GetDataError(file_path, e)
-    except Exception:
-        raise Exception("An unknown error occurred.")
+    except Exception as e:
+        logger.critical("An unexpected error occurred", exc_info=True)
+        raise e
