@@ -40,7 +40,7 @@ class TestObfuscator:
 
 @pytest.mark.error_handling
 class TestObfuscatorErrorHandling:
-    def test_raises_generic_exception(self, mocker):
+    def test_raises_critical_exception_for_unknown_error(self, mocker, caplog):
         get_data = mocker.patch("src.obfuscator.get_data")
         get_data.side_effect = Exception
 
@@ -49,10 +49,11 @@ class TestObfuscatorErrorHandling:
             "pii_fields": ["name"],
         }
 
-        with pytest.raises(Exception) as e:
+        with pytest.raises(Exception):
             obfuscator(event)
 
-        assert str(e.value) == "An unknown error occurred."
+        assert "An unexpected error occurred" in caplog.text
+        assert any(record.levelname == "CRITICAL" for record in caplog.records)
 
 
 @pytest.mark.error_handling
