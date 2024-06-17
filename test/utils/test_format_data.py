@@ -4,7 +4,6 @@ from src.exceptions import FormatDataError
 from src.utils.format_data import format_data
 
 
-@pytest.mark.xfail
 class TestFormatData:
     def test_format_data_calls_serialise_data(self, mocker):
         serialise_data = mocker.patch("src.utils.format_data.serialise_data")
@@ -12,7 +11,6 @@ class TestFormatData:
         serialise_data.assert_called_once_with(["data"])
 
 
-@pytest.mark.xfail
 class TestFormatDataErrorHandling:
     def test_raises_format_data_error_for_exceptions(self, mocker):
         serialise_data = mocker.patch("src.utils.format_data.serialise_data")

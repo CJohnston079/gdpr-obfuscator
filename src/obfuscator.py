@@ -5,9 +5,9 @@ from botocore.exceptions import ClientError
 from src.exceptions import FormatDataError
 from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
+from src.utils.format_data import format_data
 from src.utils.get_data import get_data
 from src.utils.obfuscate_fields import obfuscate_fields
-from src.utils.serialise_data import serialise_data
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,9 +21,9 @@ def obfuscator(event):
 
         data = get_data(file_path)
         obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
-        serialized_data = serialise_data(obfuscated_data)
+        formatted_data = format_data(obfuscated_data)
 
-        return serialized_data
+        return formatted_data
 
     except (GetDataError, ClientError, TypeError) as e:
         logger.error(

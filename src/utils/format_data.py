@@ -1,2 +1,12 @@
+from src.exceptions import FormatDataError
+from src.utils.serialise_data import serialise_data
+
+
 def format_data(data):
-    return 2
+    try:
+        formatted_data = serialise_data(data)
+
+        return formatted_data
+
+    except Exception as e:
+        raise FormatDataError(e)

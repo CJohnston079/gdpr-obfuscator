@@ -17,7 +17,6 @@ class TestObfuscator:
             f'{test_shallow_data["shallow_list_based_obfuscated"]}'
         )
 
-    @pytest.mark.xfail
     def test_obfuscator_calls_helper_functions(self, mocker):
         get_data = mocker.patch("src.obfuscator.get_data")
         obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
