@@ -1,6 +1,7 @@
 import pytest
 
 from src.exceptions import GetDataError
+from src.exceptions import ObfuscationError
 from src.obfuscator import obfuscator
 
 
@@ -57,10 +58,10 @@ class TestObfuscatorErrorHandling:
 
 
 @pytest.mark.error_handling
-class TestObfuscatorHandlesGetDataError:
+class TestObfuscatorHandlesPropagatedUtilExceptions:
     def test_raises_get_data_error(self, mocker, caplog):
-        get_data_mock = mocker.patch("src.obfuscator.get_data")
-        get_data_mock.side_effect = GetDataError("Error loading data")
+        get_data = mocker.patch("src.obfuscator.get_data")
+        get_data.side_effect = GetDataError("Error loading data")
 
         event = {
             "file_to_obfuscate": "s3://erroneous-file",
@@ -71,3 +72,20 @@ class TestObfuscatorHandlesGetDataError:
             obfuscator(event)
 
         assert "Error loading data from" in caplog.text
+
+    def test_raises_obfuscate_fields_error(self, mocker, caplog):
+        mocker.patch("src.obfuscator.get_data")
+        obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
+        obfuscate_fields.side_effect = ObfuscationError(
+            "Error obfuscating fields"
+        )
+
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.csv",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(ObfuscationError):
+            obfuscator(event)
+
+        assert "Error obfuscating fields" in caplog.text
