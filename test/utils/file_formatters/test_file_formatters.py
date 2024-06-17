@@ -12,7 +12,6 @@ from src.utils.file_formatters.format_parquet_data import format_parquet_data
 from src.utils.file_formatters.format_xml_data import format_xml_data
 
 
-@pytest.mark.xfail
 class TestFileFormatters:
     @pytest.mark.parametrize(
         "format_func, expected_output",

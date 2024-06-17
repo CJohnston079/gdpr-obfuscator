@@ -1,2 +1,8 @@
+import json
+
+
 def format_json_data(data):
-    pass
+    if data == []:
+        return "[]"
+
+    return json.dumps(data)
