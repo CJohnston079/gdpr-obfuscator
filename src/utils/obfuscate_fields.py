@@ -1,3 +1,6 @@
+from src.exceptions import ObfuscationError
+
+
 def obfuscate_fields(data, fields):
     """
     Obfuscates targeted fields in a list of dictionaries.
@@ -16,19 +19,27 @@ def obfuscate_fields(data, fields):
         list of dict: A new list of dictionaries where the targeted fields are
         replaced with "***".
     """
-    obfuscated_data = []
+    try:
+        obfuscated_data = []
 
-    for record in data:
-        obfuscated_record = {}
+        for record in data:
+            obfuscated_field = {}
 
-        for key, value in record.items():
-            if isinstance(value, list):
-                obfuscated_record[key] = obfuscate_fields(value, fields)
-            elif isinstance(value, dict):
-                obfuscated_record[key] = obfuscate_fields([value], fields)[0]
-            else:
-                obfuscated_record[key] = "***" if key in fields else value
+            for key, val in record.items():
+                if isinstance(val, list):
+                    obfuscated_field[key] = obfuscate_fields(val, fields)
+                elif isinstance(val, dict):
+                    obfuscated_field[key] = obfuscate_fields([val], fields)[0]
+                else:
+                    obfuscated_field[key] = "***" if key in fields else val
 
-        obfuscated_data.append(obfuscated_record)
+            obfuscated_data.append(obfuscated_field)
 
-    return obfuscated_data
+        return obfuscated_data
+
+    except AttributeError as e:
+        raise AttributeError(e)
+    except RecursionError:
+        raise RecursionError("maximum recursion depth exceeded.")
+    except Exception as e:
+        raise ObfuscationError(e)
