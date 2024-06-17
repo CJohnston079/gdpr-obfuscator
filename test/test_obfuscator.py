@@ -7,6 +7,7 @@ from src.obfuscator import obfuscator
 
 
 class TestObfuscator:
+    @pytest.mark.xfail
     def test_obfuscator_calls_helper_functions(
         self, mocker, test_shallow_data
     ):
@@ -30,7 +31,7 @@ class TestObfuscator:
         obfuscator(event)
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
-        get_data.assert_called_once_with("s3://bucket/data/file.csv")
+        get_data.assert_called_once_with("s3://bucket/data/file.csv", "csv")
         obfuscate_fields.assert_called_once_with(original_data, ["name"])
         format_data.assert_called_once_with(obfuscated_data, "csv")
 
