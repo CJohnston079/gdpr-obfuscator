@@ -5,10 +5,9 @@ from src.utils.file_readers import get_csv_data
 from src.utils.file_readers import get_json_data
 from src.utils.file_readers import get_parquet_data
 from src.utils.file_readers import get_xml_data
-from src.utils.get_file_type import get_file_type
 
 
-def get_data(file_path):
+def get_data(file_path, file_type):
     """
     Reads the contents of a file and returns a list of dictionaries,
 
@@ -24,7 +23,6 @@ def get_data(file_path):
         GetDataError: If any other Exception is raised.
     """
     try:
-        file_type = get_file_type(file_path)
         bucket = file_path.split("/")[2]
         key = "/".join(file_path.split("/")[3:])
 

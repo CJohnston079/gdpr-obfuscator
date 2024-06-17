@@ -7,7 +7,6 @@ from src.obfuscator import obfuscator
 
 
 class TestObfuscator:
-    @pytest.mark.xfail
     def test_obfuscator_calls_helper_functions(
         self, mocker, test_shallow_data
     ):

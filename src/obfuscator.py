@@ -21,7 +21,7 @@ def obfuscator(event):
         fields_to_obfuscate = event["pii_fields"]
         file_type = get_file_type(file_path)
 
-        data = get_data(file_path)
+        data = get_data(file_path, file_type)
         obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
         formatted_data = format_data(obfuscated_data, file_type)
 

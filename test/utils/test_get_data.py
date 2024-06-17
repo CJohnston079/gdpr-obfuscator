@@ -5,7 +5,6 @@ from src.exceptions import GetDataError
 from src.utils.get_data import get_data
 
 
-@pytest.mark.xfail
 class TestGetData:
     @pytest.mark.parametrize(
         "file_type, file_path, file_handler",
@@ -27,7 +26,6 @@ class TestGetData:
         mock_file_handler.assert_called_once_with(bucket, key)
 
 
-@pytest.mark.xfail
 @pytest.mark.error_handling
 class TestGetDataErrorHandling:
     def test_get_data_handles_unsupported_file_type(self):
@@ -44,7 +42,6 @@ class TestGetDataErrorHandling:
             get_data("s3://bucket/data/file.csv", "csv")
 
 
-@pytest.mark.xfail
 @pytest.mark.error_handling
 class TestClientErrorResponses:
     @pytest.mark.parametrize(
