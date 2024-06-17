@@ -7,40 +7,56 @@ from src.obfuscator import obfuscator
 
 
 class TestObfuscator:
-    @pytest.fixture(autouse=True)
-    def setup(self, test_shallow_data):
-        self.original_data = test_shallow_data["shallow_list_based"]
-        self.obfuscated_data = test_shallow_data[
-            "shallow_list_based_obfuscated"
-        ]
-        self.serialized_data = (
-            f'{test_shallow_data["shallow_list_based_obfuscated"]}'
-        )
+    def test_obfuscator_calls_helper_functions(
+        self, mocker, test_shallow_data
+    ):
+        original_data = test_shallow_data["shallow_list_based"]
+        obfuscated_data = test_shallow_data["shallow_list_based_obfuscated"]
 
-    def test_obfuscator_calls_helper_functions(self, mocker):
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_data = mocker.patch("src.obfuscator.get_data")
         obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
         format_data = mocker.patch("src.obfuscator.format_data")
 
         get_file_type.return_value = "csv"
-        get_data.return_value = self.original_data
-        obfuscate_fields.return_value = self.obfuscated_data
-        format_data.return_value = self.serialized_data
+        get_data.return_value = original_data
+        obfuscate_fields.return_value = obfuscated_data
 
         event = {
             "file_to_obfuscate": "s3://bucket/data/file.csv",
             "pii_fields": ["name"],
         }
 
-        result = obfuscator(event)
+        obfuscator(event)
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
         get_data.assert_called_once_with("s3://bucket/data/file.csv")
-        obfuscate_fields.assert_called_once_with(self.original_data, ["name"])
-        format_data.assert_called_once_with(self.obfuscated_data, "csv")
+        obfuscate_fields.assert_called_once_with(original_data, ["name"])
+        format_data.assert_called_once_with(obfuscated_data, "csv")
 
-        assert result == self.serialized_data
+    def test_obfuscator_returns_expected_value(self, mocker, test_xml_data):
+        original_data = test_xml_data["shallow_dict_based"]
+        obfuscated_data = test_xml_data["shallow_dict_based"]
+        expected_return = test_xml_data["shallow_xml_str"]
+
+        get_file_type = mocker.patch("src.obfuscator.get_file_type")
+        get_data = mocker.patch("src.obfuscator.get_data")
+        obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
+        format_data = mocker.patch("src.obfuscator.format_data")
+
+        get_file_type.return_value = "xml"
+        get_data.return_value = original_data
+        obfuscate_fields.return_value = obfuscated_data
+        format_data.return_value = expected_return
+
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.xml",
+            "pii_fields": ["name"],
+        }
+
+        result = obfuscator(event)
+
+        assert result == expected_return
 
 
 @pytest.mark.error_handling
