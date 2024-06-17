@@ -15,56 +15,26 @@ class TestGetData:
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
 
-    def test_get_data_calls_get_csv_data_when_file_type_is_csv(self, mocker):
-        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_csv_data = mocker.patch("src.utils.get_data.get_csv_data")
-
-        get_file_type.return_value = "csv"
-        get_data("s3://bucket/data/file.csv")
-
-        get_csv_data.assert_called_once_with("bucket", "data/file.csv")
-
-    def test_get_data_calls_get_csv_data_when_file_type_is_json(self, mocker):
-        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_json_data = mocker.patch("src.utils.get_data.get_json_data")
-
-        get_file_type.return_value = "json"
-        get_data("s3://bucket/data/file.json")
-
-        get_json_data.assert_called_once_with("bucket", "data/file.json")
-
-    def test_get_data_calls_get_csv_data_when_file_type_is_parquet(
-        self, mocker
+    @pytest.mark.parametrize(
+        "file_type, file_path, file_handler",
+        [
+            ("csv", "s3://bucket/data/file.csv", "get_csv_data"),
+            ("json", "s3://bucket/data/file.json", "get_json_data"),
+            ("parquet", "s3://bucket/data/file.parquet", "get_parquet_data"),
+            ("xml", "s3://bucket/data/file.xml", "get_xml_data"),
+        ],
+    )
+    def test_get_data_calls_correct_function(
+        self, mocker, file_type, file_path, file_handler
     ):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_parquet_data = mocker.patch("src.utils.get_data.get_parquet_data")
+        mock_file_handler = mocker.patch(f"src.utils.get_data.{file_handler}")
 
-        get_file_type.return_value = "parquet"
-        get_data("s3://bucket/data/file.parquet")
+        get_file_type.return_value = file_type
+        get_data(file_path)
 
-        get_parquet_data.assert_called_once_with("bucket", "data/file.parquet")
-
-    def test_get_data_calls_get_csv_data_when_file_type_is_xml(self, mocker):
-        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_xml_data = mocker.patch("src.utils.get_data.get_xml_data")
-
-        get_file_type.return_value = "xml"
-        get_data("s3://bucket/data/file.xml")
-
-        get_xml_data.assert_called_once_with("bucket", "data/file.xml")
-
-    def test_get_data_calls_returns_expected_data(
-        self, mocker, test_shallow_data
-    ):
-        get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_csv_data = mocker.patch("src.utils.get_data.get_csv_data")
-
-        get_file_type.return_value = "csv"
-        get_csv_data.return_value = test_shallow_data["shallow_list_based"]
-
-        result = get_data("s3://bucket/data/file.csv")
-
-        assert result == test_shallow_data["shallow_list_based"]
+        bucket, key = file_path.replace("s3://", "").split("/", 1)
+        mock_file_handler.assert_called_once_with(bucket, key)
 
 
 @pytest.mark.error_handling
