@@ -79,7 +79,7 @@ class TestGetDataErrorHandling:
 
         assert str(e.value) == ("file type .txt is not supported")
 
-    def test_raises_get_data_error_for_caught_exceptions(self, mocker, caplog):
+    def test_raises_get_data_error_for_caught_exceptions(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
         get_file_type.side_effect = Exception
 
