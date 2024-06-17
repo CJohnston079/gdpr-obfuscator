@@ -7,6 +7,7 @@ from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
 from src.utils.format_data import format_data
 from src.utils.get_data import get_data
+from src.utils.get_file_type import get_file_type
 from src.utils.obfuscate_fields import obfuscate_fields
 
 
@@ -18,10 +19,11 @@ def obfuscator(event):
     try:
         file_path = event["file_to_obfuscate"]
         fields_to_obfuscate = event["pii_fields"]
+        file_type = get_file_type(file_path)
 
         data = get_data(file_path)
         obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
-        formatted_data = format_data(obfuscated_data)
+        formatted_data = format_data(obfuscated_data, file_type)
 
         return formatted_data
 
