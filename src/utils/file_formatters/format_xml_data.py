@@ -2,6 +2,15 @@ import xml.etree.ElementTree as ET
 
 
 def format_xml_data(data):
+    """
+    Formats a data structure into an XML string ready for writing.
+
+    Args:
+        data (str): The data to be formatted
+
+    Returns:
+        str: An XML formatted string.
+    """
     if data == []:
         return "<data></data>"
 

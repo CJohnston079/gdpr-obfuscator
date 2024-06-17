@@ -3,6 +3,15 @@ import io
 
 
 def format_csv_data(data):
+    """
+    Formats a data structure into a CSV string ready for writing.
+
+    Args:
+        data (str): The data to be formatted
+
+    Returns:
+        str: A CSV formatted string.
+    """
     if data == []:
         return ""
 
