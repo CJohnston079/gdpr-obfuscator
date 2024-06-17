@@ -7,6 +7,22 @@ from src.utils.file_formatters.serialise_data import serialise_data
 
 
 def format_data(data, file_type=None):
+    """
+    Formats a list of data into a string ready to be written to a specified
+    file type. If no file type is specified, a generic serialised string is
+    returned.
+
+    Args:
+        data (list): the data to be formatted
+        file_type (str): The extension with which to look up correct handler
+
+    Returns:
+        formatted_data (str): A string of data formatted ready for writing to
+            the specified file_type.
+
+    Raises:
+        FormatDataError: If an Exception is raised while formatting the data.
+    """
     try:
         handlers = {
             "csv": format_csv_data,

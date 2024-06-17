@@ -16,6 +16,26 @@ logger = logging.getLogger(__name__)
 
 
 def obfuscator(event):
+    """
+    Obfuscates personally identifiable information (PII) fields in a data file.
+
+    Args:
+        event (dict): A dictionary containing the following keys:
+            file_to_obfuscate (str): The S3 URI of the file to be obfuscated.
+            pii_fields (list): A list of strings of PII fields for obfuscation.
+
+    Returns:
+        str: The obfuscated data in the same format as the input file.
+
+    Raises:
+        AttributeError: If there is an error extracting the file type.
+        GetDataError: If there is an error loading the data from the file.
+        ClientError: If there is an AWS error loading the data.
+        TypeError: If there the file type is not supported.
+        ObfuscationError: If there is an error obfuscating the PII fields.
+        FormatDataError: If there is an error formatting the obfuscated data.
+        Exception (critical): If an unexpected error occurs.
+    """
     try:
         file_path = event["file_to_obfuscate"]
         fields_to_obfuscate = event["pii_fields"]

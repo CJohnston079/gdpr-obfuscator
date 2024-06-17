@@ -9,15 +9,14 @@ from src.utils.file_readers import get_xml_data
 
 def get_data(file_path, file_type):
     """
-    Reads the contents of a file and returns a list of dictionaries,
+    Reads the contents of a file and returns a list of dictionaries.
 
     Args:
         file_path (str): The path to the file to be read.
         file_type (str): The extension with which to look up correct handler
 
     Returns:
-        list: A list of dictionaries representing the data structure in
-            the file.
+        data (list): A list of dictionaries of the data structure in the file.
 
     Raises:
         TypeError: If no function exists to handle file_type.
