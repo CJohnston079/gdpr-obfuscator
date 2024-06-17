@@ -8,57 +8,59 @@ from src.utils.get_data import get_data
 class TestGetData:
     def test_get_data_calls_get_file_type(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        mocker.patch("src.utils.get_data.handle_csv")
+        mocker.patch("src.utils.get_data.get_csv_data")
 
         get_file_type.return_value = "csv"
         get_data("s3://bucket/data/file.csv")
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
 
-    def test_get_data_calls_handle_csv_when_file_type_is_csv(self, mocker):
+    def test_get_data_calls_get_csv_data_when_file_type_is_csv(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+        get_csv_data = mocker.patch("src.utils.get_data.get_csv_data")
 
         get_file_type.return_value = "csv"
         get_data("s3://bucket/data/file.csv")
 
-        handle_csv.assert_called_once_with("bucket", "data/file.csv")
+        get_csv_data.assert_called_once_with("bucket", "data/file.csv")
 
-    def test_get_data_calls_handle_csv_when_file_type_is_json(self, mocker):
+    def test_get_data_calls_get_csv_data_when_file_type_is_json(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_json = mocker.patch("src.utils.get_data.handle_json")
+        get_json_data = mocker.patch("src.utils.get_data.get_json_data")
 
         get_file_type.return_value = "json"
         get_data("s3://bucket/data/file.json")
 
-        handle_json.assert_called_once_with("bucket", "data/file.json")
+        get_json_data.assert_called_once_with("bucket", "data/file.json")
 
-    def test_get_data_calls_handle_csv_when_file_type_is_parquet(self, mocker):
+    def test_get_data_calls_get_csv_data_when_file_type_is_parquet(
+        self, mocker
+    ):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_parquet = mocker.patch("src.utils.get_data.handle_parquet")
+        get_paruqet_data = mocker.patch("src.utils.get_data.get_paruqet_data")
 
         get_file_type.return_value = "parquet"
         get_data("s3://bucket/data/file.parquet")
 
-        handle_parquet.assert_called_once_with("bucket", "data/file.parquet")
+        get_paruqet_data.assert_called_once_with("bucket", "data/file.parquet")
 
-    def test_get_data_calls_handle_csv_when_file_type_is_xml(self, mocker):
+    def test_get_data_calls_get_csv_data_when_file_type_is_xml(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_xml = mocker.patch("src.utils.get_data.handle_xml")
+        get_xml_data = mocker.patch("src.utils.get_data.get_xml_data")
 
         get_file_type.return_value = "xml"
         get_data("s3://bucket/data/file.xml")
 
-        handle_xml.assert_called_once_with("bucket", "data/file.xml")
+        get_xml_data.assert_called_once_with("bucket", "data/file.xml")
 
     def test_get_data_calls_returns_expected_data(
         self, mocker, test_shallow_data
     ):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+        get_csv_data = mocker.patch("src.utils.get_data.get_csv_data")
 
         get_file_type.return_value = "csv"
-        handle_csv.return_value = test_shallow_data["shallow_list_based"]
+        get_csv_data.return_value = test_shallow_data["shallow_list_based"]
 
         result = get_data("s3://bucket/data/file.csv")
 
@@ -99,23 +101,23 @@ class TestClientErrorResponses:
     )
     def test_get_data_client_errors(self, mocker, file_path, exception):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        handle_csv = mocker.patch("src.utils.get_data.handle_csv")
+        get_csv_data = mocker.patch("src.utils.get_data.get_csv_data")
         get_file_type.return_value = "csv"
 
         if exception == FileNotFoundError:
-            handle_csv.side_effect = ClientError(
+            get_csv_data.side_effect = ClientError(
                 {"Error": {"Code": "NoSuchKey"}}, "operation_name"
             )
         elif exception == PermissionError:
-            handle_csv.side_effect = ClientError(
+            get_csv_data.side_effect = ClientError(
                 {"Error": {"Code": "AccessDenied"}}, "operation_name"
             )
         elif exception == IOError:
-            handle_csv.side_effect = ClientError(
+            get_csv_data.side_effect = ClientError(
                 {"Error": {"Code": "OtherError"}}, "operation_name"
             )
         elif exception == GetDataError:
-            handle_csv.side_effect = ValueError("Invalid CSV")
+            get_csv_data.side_effect = ValueError("Invalid CSV")
 
         with pytest.raises(exception):
             get_data(file_path)

@@ -4,7 +4,7 @@ import io
 import boto3
 
 
-def handle_csv(bucket, key):
+def get_csv_data(bucket, key):
     """
     Reads the contents of a CSV file from an AWS S3 bucket and returns a list
     of dictionaries.

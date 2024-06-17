@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import boto3
 
 
-def handle_xml(bucket, key):
+def get_xml_data(bucket, key):
     """
     Reads the contents of a XML file from an AWS S3 bucket and returns a
     list of dictionaries of the same structure as the XML file.

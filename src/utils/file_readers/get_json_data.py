@@ -3,7 +3,7 @@ import json
 import boto3
 
 
-def handle_json(bucket, key):
+def get_json_data(bucket, key):
     """
     Reads the contents of a JSON file from an AWS S3 bucket and returns a list
     of dictionaries.

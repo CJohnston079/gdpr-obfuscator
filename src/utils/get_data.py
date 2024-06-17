@@ -1,10 +1,10 @@
 from botocore.exceptions import ClientError
 
 from src.exceptions import GetDataError
-from src.utils.file_handlers import handle_csv
-from src.utils.file_handlers import handle_json
-from src.utils.file_handlers import handle_parquet
-from src.utils.file_handlers import handle_xml
+from src.utils.file_readers import get_csv_data
+from src.utils.file_readers import get_json_data
+from src.utils.file_readers import get_paruqet_data
+from src.utils.file_readers import get_xml_data
 from src.utils.get_file_type import get_file_type
 
 
@@ -29,11 +29,11 @@ def get_data(file_path):
         key = "/".join(file_path.split("/")[3:])
 
         handlers = {
-            "csv": handle_csv,
-            "json": handle_json,
-            "pqt": handle_parquet,
-            "parquet": handle_parquet,
-            "xml": handle_xml,
+            "csv": get_csv_data,
+            "json": get_json_data,
+            "pqt": get_paruqet_data,
+            "parquet": get_paruqet_data,
+            "xml": get_xml_data,
         }
 
         handler = handlers.get(file_type)
