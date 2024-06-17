@@ -77,9 +77,7 @@ class TestObfuscatorErrorHandling:
         assert any(record.levelname == "CRITICAL" for record in caplog.records)
 
 
-@pytest.mark.error_handling
 class TestObfuscatorHandlesPropagatedUtilExceptions:
-    @pytest.mark.xfail
     def test_raises_attribute_error(self, mocker, caplog):
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_file_type.side_effect = AttributeError

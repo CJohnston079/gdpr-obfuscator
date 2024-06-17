@@ -33,6 +33,7 @@ class TestFormatData:
         assert result == xml_string
 
 
+@pytest.mark.error_handling
 class TestFormatDataErrorHandling:
     def test_raises_format_data_error_for_exceptions(self, mocker):
         serialise_data = mocker.patch("src.utils.format_data.serialise_data")

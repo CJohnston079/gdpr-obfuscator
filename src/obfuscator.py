@@ -27,6 +27,9 @@ def obfuscator(event):
 
         return formatted_data
 
+    except AttributeError as e:
+        logger.error(f"Error extracting file type: {e}", exc_info=True)
+        raise e
     except (GetDataError, ClientError, TypeError) as e:
         logger.error(
             f"Error loading data from {file_path}: {e}", exc_info=True
