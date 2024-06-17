@@ -37,12 +37,12 @@ class TestGetData:
         self, mocker
     ):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")
-        get_paruqet_data = mocker.patch("src.utils.get_data.get_paruqet_data")
+        get_parquet_data = mocker.patch("src.utils.get_data.get_parquet_data")
 
         get_file_type.return_value = "parquet"
         get_data("s3://bucket/data/file.parquet")
 
-        get_paruqet_data.assert_called_once_with("bucket", "data/file.parquet")
+        get_parquet_data.assert_called_once_with("bucket", "data/file.parquet")
 
     def test_get_data_calls_get_csv_data_when_file_type_is_xml(self, mocker):
         get_file_type = mocker.patch("src.utils.get_data.get_file_type")

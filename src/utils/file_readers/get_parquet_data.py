@@ -4,7 +4,7 @@ import boto3
 import pyarrow.parquet as pq
 
 
-def get_paruqet_data(bucket, key):
+def get_parquet_data(bucket, key):
     """
     Reads the contents of a Parquet file from an AWS S3 bucket and returns a
     list of dictionaries.

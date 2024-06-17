@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 from src.exceptions import GetDataError
 from src.utils.file_readers import get_csv_data
 from src.utils.file_readers import get_json_data
-from src.utils.file_readers import get_paruqet_data
+from src.utils.file_readers import get_parquet_data
 from src.utils.file_readers import get_xml_data
 from src.utils.get_file_type import get_file_type
 
@@ -31,8 +31,8 @@ def get_data(file_path):
         handlers = {
             "csv": get_csv_data,
             "json": get_json_data,
-            "pqt": get_paruqet_data,
-            "parquet": get_paruqet_data,
+            "pqt": get_parquet_data,
+            "parquet": get_parquet_data,
             "xml": get_xml_data,
         }
 

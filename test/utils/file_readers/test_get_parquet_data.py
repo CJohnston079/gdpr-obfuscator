@@ -4,7 +4,7 @@ import pyarrow.parquet as pq
 import pytest
 from moto import mock_aws
 
-from src.utils.file_readers.get_paruqet_data import get_paruqet_data
+from src.utils.file_readers.get_parquet_data import get_parquet_data
 
 
 @mock_aws
@@ -30,13 +30,13 @@ class TestGetParquetData:
         )
 
     def test_returns_list_of_dicts(self):
-        result = get_paruqet_data("test-bucket", "dir/test_parquet.parquet")
+        result = get_parquet_data("test-bucket", "dir/test_parquet.parquet")
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
 
     def test_returns_list_of_expected_length(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
-        result = get_paruqet_data("test-bucket", "dir/test_parquet.parquet")
+        result = get_parquet_data("test-bucket", "dir/test_parquet.parquet")
         assert len(result) == len(data)
 
     def test_returns_empty_list_when_passed_empty_file(self, s3_bucket):
@@ -54,15 +54,15 @@ class TestGetParquetData:
             Body=empty_parquet_data,
         )
 
-        result = get_paruqet_data("test-bucket", "dir/empty_parquet.parquet")
+        result = get_parquet_data("test-bucket", "dir/empty_parquet.parquet")
         assert result == []
 
     def test_returns_expected_data(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
-        result = get_paruqet_data("test-bucket", "dir/test_parquet.parquet")
+        result = get_parquet_data("test-bucket", "dir/test_parquet.parquet")
         assert result == data
 
     def test_handles_files_with_pq_extension(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
-        result = get_paruqet_data("test-bucket", "dir/test_pq.pq")
+        result = get_parquet_data("test-bucket", "dir/test_pq.pq")
         assert result == data
