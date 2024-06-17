@@ -2,7 +2,7 @@ import io
 import pickle
 
 
-def serialise_dicts(dicts):
+def serialise_data(dicts):
     """
     Serialize a list of dictionaries using pickle.
 

@@ -7,7 +7,7 @@ from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
 from src.utils.get_data import get_data
 from src.utils.obfuscate_fields import obfuscate_fields
-from src.utils.serialise_dicts import serialise_dicts
+from src.utils.serialise_data import serialise_data
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,7 +21,7 @@ def obfuscator(event):
 
         data = get_data(file_path)
         obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
-        serialized_data = serialise_dicts(obfuscated_data)
+        serialized_data = serialise_data(obfuscated_data)
 
         return serialized_data
 
