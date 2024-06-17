@@ -13,6 +13,7 @@ def get_data(file_path, file_type):
 
     Args:
         file_path (str): The path to the file to be read.
+        file_type (str): The extension with which to look up correct handler
 
     Returns:
         list: A list of dictionaries representing the data structure in
