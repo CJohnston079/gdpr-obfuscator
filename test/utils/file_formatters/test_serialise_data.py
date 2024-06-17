@@ -1,7 +1,7 @@
 import io
 import pickle
 
-from src.utils.serialise_data import serialise_data
+from src.utils.file_formatters.serialise_data import serialise_data
 
 
 class TestSerialiseDicts:
