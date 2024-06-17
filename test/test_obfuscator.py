@@ -79,6 +79,21 @@ class TestObfuscatorErrorHandling:
 
 @pytest.mark.error_handling
 class TestObfuscatorHandlesPropagatedUtilExceptions:
+    @pytest.mark.xfail
+    def test_raises_attribute_error(self, mocker, caplog):
+        get_file_type = mocker.patch("src.obfuscator.get_file_type")
+        get_file_type.side_effect = AttributeError
+
+        event = {
+            "file_to_obfuscate": "s3://data/file",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(AttributeError):
+            obfuscator(event)
+
+        assert "Error extracting file type" in caplog.text
+
     def test_raises_get_data_error(self, mocker, caplog):
         mocker.patch("src.obfuscator.get_file_type")
         get_data = mocker.patch("src.obfuscator.get_data")
