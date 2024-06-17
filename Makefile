@@ -53,10 +53,10 @@ run-flake:
 unit-test:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v)
 
-test-error-handling:
+mark-test-error-handling:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
 
-test-only:
+mark-test-only:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m only -v)
 
 check-coverage:
