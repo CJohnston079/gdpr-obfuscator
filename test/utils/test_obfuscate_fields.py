@@ -1,4 +1,7 @@
 import copy
+import sys
+
+import pytest
 
 from src.utils.obfuscate_fields import obfuscate_fields
 
@@ -44,3 +47,27 @@ class TestObfuscateFields:
         result = obfuscate_fields(data, ["name", "email", "phone"])
 
         assert result == obfuscated_data
+
+
+@pytest.mark.error_handling
+class TestObfuscateFieldsErrorHandling:
+    def test_raises_attribute_error(self):
+        with pytest.raises(AttributeError):
+            obfuscate_fields("invalid input", ["name"])
+
+    def test_raises_recursion_error(self):
+        recursion_limit = sys.getrecursionlimit()
+        nested_data = []
+
+        for _ in range(recursion_limit):
+            nested_data = [{"nested": nested_data}]
+
+        with pytest.raises(RecursionError):
+            obfuscate_fields(nested_data, ["nested"])
+
+    def test_raises_obfuscation_error_for_other_exceptions(self, mocker):
+        obfuscate_fields = mocker.patch("src.utils.obfuscate_fields")
+        obfuscate_fields.side_effect = Exception
+
+        with pytest.raises(Exception):
+            obfuscate_fields("data", "fields")
