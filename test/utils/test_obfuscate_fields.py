@@ -3,6 +3,7 @@ import sys
 
 import pytest
 
+from src.exceptions import ObfuscationError
 from src.utils.obfuscate_fields import obfuscate_fields
 
 
@@ -66,8 +67,5 @@ class TestObfuscateFieldsErrorHandling:
             obfuscate_fields(nested_data, ["nested"])
 
     def test_raises_obfuscation_error_for_other_exceptions(self, mocker):
-        obfuscate_fields = mocker.patch("src.utils.obfuscate_fields")
-        obfuscate_fields.side_effect = Exception
-
-        with pytest.raises(Exception):
-            obfuscate_fields("data", "fields")
+        with pytest.raises(ObfuscationError):
+            obfuscate_fields(Exception, ["name"])
