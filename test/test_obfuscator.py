@@ -18,10 +18,12 @@ class TestObfuscator:
         )
 
     def test_obfuscator_calls_helper_functions(self, mocker):
+        get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_data = mocker.patch("src.obfuscator.get_data")
         obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
         format_data = mocker.patch("src.obfuscator.format_data")
 
+        get_file_type.return_value = "csv"
         get_data.return_value = self.original_data
         obfuscate_fields.return_value = self.obfuscated_data
         format_data.return_value = self.serialized_data
@@ -33,9 +35,10 @@ class TestObfuscator:
 
         result = obfuscator(event)
 
+        get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
         get_data.assert_called_once_with("s3://bucket/data/file.csv")
         obfuscate_fields.assert_called_once_with(self.original_data, ["name"])
-        format_data.assert_called_once_with(self.obfuscated_data)
+        format_data.assert_called_once_with(self.obfuscated_data, "csv")
 
         assert result == self.serialized_data
 
@@ -43,8 +46,8 @@ class TestObfuscator:
 @pytest.mark.error_handling
 class TestObfuscatorErrorHandling:
     def test_raises_critical_exception_for_unknown_error(self, mocker, caplog):
-        get_data = mocker.patch("src.obfuscator.get_data")
-        get_data.side_effect = Exception
+        get_file_type = mocker.patch("src.obfuscator.get_file_type")
+        get_file_type.side_effect = Exception
 
         event = {
             "file_to_obfuscate": "s3://bucket/data/file.txt",
@@ -61,6 +64,7 @@ class TestObfuscatorErrorHandling:
 @pytest.mark.error_handling
 class TestObfuscatorHandlesPropagatedUtilExceptions:
     def test_raises_get_data_error(self, mocker, caplog):
+        mocker.patch("src.obfuscator.get_file_type")
         get_data = mocker.patch("src.obfuscator.get_data")
         get_data.side_effect = GetDataError("Error loading data")
 
@@ -75,6 +79,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
         assert "Error loading data from" in caplog.text
 
     def test_raises_obfuscate_fields_error(self, mocker, caplog):
+        mocker.patch("src.obfuscator.get_file_type")
         mocker.patch("src.obfuscator.get_data")
         obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
         obfuscate_fields.side_effect = ObfuscationError(
@@ -92,6 +97,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
         assert "Error obfuscating fields" in caplog.text
 
     def test_raises_format_data_error(self, mocker, caplog):
+        mocker.patch("src.obfuscator.get_file_type")
         mocker.patch("src.obfuscator.get_data")
         mocker.patch("src.obfuscator.obfuscate_fields")
         format_data = mocker.patch("src.obfuscator.format_data")
