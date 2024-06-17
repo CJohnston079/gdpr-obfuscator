@@ -38,10 +38,18 @@ class TestFileFormatters:
 
         assert result == expected_csv
 
-    def test_format_json_data(self, test_shallow_data):
-        data = test_shallow_data["shallow_list_based"]
-        result = format_json_data(data)
+    @pytest.mark.parametrize(
+        "data_key", ["deep_list_based", "shallow_list_based"]
+    )
+    def test_format_json_data(
+        self, test_deep_data, test_shallow_data, data_key
+    ):
+        if "deep" in data_key:
+            data = test_deep_data[data_key]
+        else:
+            data = test_shallow_data[data_key]
 
+        result = format_json_data(data)
         expected_json = json.dumps(data)
 
         assert result == expected_json
@@ -60,8 +68,17 @@ class TestFileFormatters:
         expected_df = pd.DataFrame(data)
         pd.testing.assert_frame_equal(df_read, expected_df)
 
-    def test_format_xml_data(self, test_shallow_data):
-        data = test_shallow_data["shallow_dict_based"]
+    @pytest.mark.parametrize(
+        "data_key", ["deep_dict_based", "shallow_dict_based"]
+    )
+    def test_format_xml_data(
+        self, test_deep_data, test_shallow_data, data_key
+    ):
+        if "deep" in data_key:
+            data = test_deep_data[data_key]
+        else:
+            data = test_shallow_data[data_key]
+
         result = format_xml_data(data)
 
         root = ET.fromstring(result)
