@@ -4,7 +4,6 @@ from src.exceptions import FormatDataError
 from src.utils.format_data import format_data
 
 
-@pytest.mark.xfail
 class TestFormatData:
     @pytest.mark.parametrize(
         "file_type, file_handler",
