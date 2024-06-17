@@ -2,6 +2,7 @@ import logging
 
 from botocore.exceptions import ClientError
 
+from src.exceptions import FormatDataError
 from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
 from src.utils.get_data import get_data
@@ -31,6 +32,9 @@ def obfuscator(event):
         raise e
     except ObfuscationError as e:
         logger.error(f"Error obfuscating fields: {e}", exc_info=True)
+        raise e
+    except FormatDataError as e:
+        logger.error(f"Error formatting obfuscated data: {e}", exc_info=True)
         raise e
     except Exception as e:
         logger.critical("An unexpected error occurred", exc_info=True)
