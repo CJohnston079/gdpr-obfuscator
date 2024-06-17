@@ -4,3 +4,7 @@ class GetDataError(Exception):
 
 class ObfuscationError(Exception):
     pass
+
+
+class FormatDataError(Exception):
+    pass

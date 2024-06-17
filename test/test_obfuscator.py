@@ -1,5 +1,6 @@
 import pytest
 
+from src.exceptions import FormatDataError
 from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
 from src.obfuscator import obfuscator
@@ -89,3 +90,19 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
             obfuscator(event)
 
         assert "Error obfuscating fields" in caplog.text
+
+    def test_raises_format_data_error(self, mocker, caplog):
+        mocker.patch("src.obfuscator.get_data")
+        mocker.patch("src.obfuscator.obfuscate_fields")
+        serialise_dicts = mocker.patch("src.obfuscator.serialise_dicts")
+        serialise_dicts.side_effect = FormatDataError("Error serialising data")
+
+        event = {
+            "file_to_obfuscate": "s3://bucket/data/file.csv",
+            "pii_fields": ["name"],
+        }
+
+        with pytest.raises(FormatDataError):
+            obfuscator(event)
+
+        assert "Error formatting obfuscated data" in caplog.text
