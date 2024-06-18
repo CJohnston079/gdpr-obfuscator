@@ -1,3 +1,4 @@
+import textwrap
 import timeit
 
 import boto3
@@ -38,29 +39,39 @@ class TestObfuscator:
         obfuscate_fields.assert_called_once_with(original_data, ["name"])
         format_data.assert_called_once_with(obfuscated_data, "csv")
 
-    def test_obfuscator_returns_expected_value(self, mocker, test_xml_data):
-        original_data = test_xml_data["shallow_dict_based"]
-        obfuscated_data = test_xml_data["shallow_dict_based"]
-        expected_return = test_xml_data["shallow_xml_str"]
+    @pytest.mark.only
+    def test_obfuscator_returns_expected_value(
+        self, s3_bucket, test_shallow_data
+    ):
+        s3, bucket_name = s3_bucket
+        data = test_shallow_data["shallow_list_based"]
+        obf_data = test_shallow_data["shallow_list_based_obfuscated"]
 
-        get_file_type = mocker.patch("src.obfuscator.get_file_type")
-        get_data = mocker.patch("src.obfuscator.get_data")
-        obfuscate_fields = mocker.patch("src.obfuscator.obfuscate_fields")
-        format_data = mocker.patch("src.obfuscator.format_data")
+        headers = data[0].keys()
+        rows = [",".join([row[key] for key in headers]) for row in data]
+        obf_rows = [
+            ",".join([row[key] for key in headers]) for row in obf_data
+        ]
+        csv_data = ",".join(headers) + "\n" + "\n".join(rows)
+        obf_csv_data = ",".join(headers) + "\n" + "\n".join(obf_rows)
 
-        get_file_type.return_value = "xml"
-        get_data.return_value = original_data
-        obfuscate_fields.return_value = obfuscated_data
-        format_data.return_value = expected_return
+        s3.put_object(
+            Bucket=bucket_name,
+            Key="data/file.csv",
+            Body=csv_data,
+        )
 
         event = {
-            "file_to_obfuscate": "s3://bucket/data/file.xml",
+            "file_to_obfuscate": "s3://test-bucket/data/file.csv",
             "pii_fields": ["name"],
         }
 
         result = obfuscator(event)
 
-        assert result == expected_return
+        result = textwrap.dedent(result).strip().replace("\r\n", "\n")
+        expected = textwrap.dedent(obf_csv_data).strip()
+
+        assert result == expected
 
 
 @pytest.mark.error_handling
