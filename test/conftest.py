@@ -30,3 +30,13 @@ def test_xml_data():
         "deep_dict_based",
         "deep_xml_str",
     )
+
+
+@pytest.fixture(scope="session")
+def test_large_data():
+    return generate_data(
+        "shallow_list_based",
+        "shallow_dict_based",
+        "shallow_xml_str",
+        num_records=10000,
+    )

@@ -1,5 +1,6 @@
 import copy
 import sys
+import timeit
 
 import pytest
 
@@ -69,3 +70,19 @@ class TestObfuscateFieldsErrorHandling:
     def test_raises_obfuscation_error_for_other_exceptions(self, mocker):
         with pytest.raises(ObfuscationError):
             obfuscate_fields(Exception, ["name"])
+
+
+@pytest.mark.performance
+class TestObfuscateFieldsPerformance:
+    def test_obfuscate_fields_performance(self, test_large_data):
+        data = test_large_data["shallow_dict_based"]
+        num_of_executions = 50
+
+        execution_time = timeit.timeit(
+            lambda: obfuscate_fields(data, ["name"]), number=num_of_executions
+        )
+
+        print(
+            "\nAverage execution time for obfuscate_fields on 10,000 records: "
+            f"{round(execution_time / num_of_executions, 4)} seconds"
+        )

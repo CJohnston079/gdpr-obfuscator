@@ -1,3 +1,5 @@
+import timeit
+
 import pytest
 
 from src.exceptions import FormatDataError
@@ -41,3 +43,19 @@ class TestFormatDataErrorHandling:
 
         with pytest.raises(FormatDataError):
             format_data("erroneous-data")
+
+
+@pytest.mark.performance
+class TestFormatDataPerformance:
+    def test_format_data_performance(self, test_large_data):
+        data = test_large_data["shallow_dict_based"]
+        num_of_executions = 50
+
+        execution_time = timeit.timeit(
+            lambda: format_data(data), number=num_of_executions
+        )
+
+        print(
+            "\nAverage execution time for format_data on 10,000 records: "
+            f"{round(execution_time / num_of_executions, 4)} seconds"
+        )
