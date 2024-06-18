@@ -1,5 +1,5 @@
 import pytest
-from data_generation import generate_data
+from generate_test_data import generate_data
 
 
 @pytest.fixture(scope="session")
