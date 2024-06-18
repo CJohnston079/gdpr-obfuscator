@@ -1,10 +1,10 @@
 from botocore.exceptions import ClientError
 
 from src.exceptions import GetDataError
-from src.utils.file_readers import get_csv_data
-from src.utils.file_readers import get_json_data
-from src.utils.file_readers import get_parquet_data
-from src.utils.file_readers import get_xml_data
+from src.utils.file_readers.get_csv_data import get_csv_data
+from src.utils.file_readers.get_json_data import get_json_data
+from src.utils.file_readers.get_parquet_data import get_parquet_data
+from src.utils.file_readers.get_xml_data import get_xml_data
 
 
 def get_data(file_path, file_type):
