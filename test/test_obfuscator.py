@@ -157,15 +157,17 @@ class TestObfuscatorPerformance:
             s3 = boto3.client("s3", region_name="us-east-1")
             s3.create_bucket(Bucket=bucket_name)
 
-            s3.put_object(
-                Bucket=bucket_name,
-                Key="dir/large-file.xml",
-                Body=test_large_data["shallow_xml_str"],
-            )
-
             yield s3, bucket_name
 
-    def test_obfuscator_performance(self):
+    def test_obfuscator_performance(self, s3_bucket, test_large_data):
+        s3, bucket_name = s3_bucket
+
+        s3.put_object(
+            Bucket=bucket_name,
+            Key="dir/large-file.xml",
+            Body=test_large_data["shallow_xml_str"],
+        )
+
         event = {
             "file_to_obfuscate": "s3://test-bucket/dir/large-file.xml",
             "pii_fields": ["name"],
