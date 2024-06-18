@@ -57,7 +57,7 @@ mark-test-error-handling:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
 
 mark-test-performance:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m performance -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m performance -sv)
 
 mark-test-only:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m only -v)
