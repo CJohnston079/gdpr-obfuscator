@@ -51,10 +51,13 @@ run-flake:
 	$(call execute_in_env, flake8  ./src/*.py ./src/*/*.py ./test/*.py ./test/*/*.py)
 
 unit-test:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v -m "not performance")
 
 mark-test-error-handling:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
+
+mark-test-performance:
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m performance -v)
 
 mark-test-only:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m only -v)
