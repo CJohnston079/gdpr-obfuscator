@@ -1,4 +1,8 @@
+import timeit
+
+import boto3
 import pytest
+from moto import mock_aws
 
 from src.exceptions import FormatDataError
 from src.exceptions import GetDataError
@@ -77,6 +81,7 @@ class TestObfuscatorErrorHandling:
         assert any(record.levelname == "CRITICAL" for record in caplog.records)
 
 
+@pytest.mark.error_handling
 class TestObfuscatorHandlesPropagatedUtilExceptions:
     def test_raises_attribute_error(self, mocker, caplog):
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
@@ -141,3 +146,41 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
             obfuscator(event)
 
         assert "Error formatting obfuscated data" in caplog.text
+
+
+@pytest.mark.performance
+class TestObfuscatorPerformance:
+    @pytest.fixture(scope="module", autouse=True)
+    def s3_bucket(self, test_large_data):
+        with mock_aws():
+            bucket_name = "test-bucket"
+            s3 = boto3.client("s3", region_name="us-east-1")
+            s3.create_bucket(Bucket=bucket_name)
+
+            s3.put_object(
+                Bucket=bucket_name,
+                Key="dir/large-file.xml",
+                Body=test_large_data["shallow_xml_str"],
+            )
+
+            yield s3, bucket_name
+
+    def test_obfuscator_performance(self):
+        event = {
+            "file_to_obfuscate": "s3://test-bucket/dir/large-file.xml",
+            "pii_fields": ["name"],
+        }
+
+        num_of_executions = 50
+        average_execution_time = round(
+            timeit.timeit(lambda: obfuscator(event), number=num_of_executions)
+            / num_of_executions,
+            4,
+        )
+
+        print(
+            "\nAverage execution time for obfuscator on 10,000 records: "
+            f"{average_execution_time} seconds"
+        )
+
+        assert average_execution_time < 1
