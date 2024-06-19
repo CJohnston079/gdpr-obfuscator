@@ -16,7 +16,8 @@ def get_xml_data(bucket, key):
         list:
             A list of dictionaries representing the data in the XML file. Each
             dictionary represents a tag in the XML file containing any child
-            elements of that tag in the same format.
+            elements of that tag in the same format. The root element of the
+            XML file is preserved as the parent dictionary.
     """
     s3 = boto3.client("s3", region_name="eu-west-2")
 
@@ -30,13 +31,9 @@ def get_xml_data(bucket, key):
 
     def parse_element(element):
         if len(element) == 0:
-            return {element.tag: element.text}
-        else:
-            children = {}
-            for child in element:
-                children.update(parse_element(child))
-            return {element.tag: children}
+            return element.text
+        return {child.tag: parse_element(child) for child in element}
 
-    data = [parse_element(child) for child in root]
+    data = [{root.tag: {child.tag: parse_element(child)}} for child in root]
 
     return data
