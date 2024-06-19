@@ -1,5 +1,3 @@
-import timeit
-
 import pytest
 
 from src.utils.file_readers.get_xml_data import get_xml_data
@@ -59,21 +57,7 @@ class TestGetXMLDataPerformance:
         s3, bucket_name = s3_bucket
         data = test_large_data["shallow_xml_str"]
 
-        s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/large-data.xml",
-            Body=data,
-        )
+        s3.put_object(Bucket=bucket_name, Key="dir/large-data.xml", Body=data)
 
-    def test_get_xml_data_performance(self):
-        num_of_executions = 50
-
-        execution_time = timeit.timeit(
-            lambda: get_xml_data("test-bucket", "dir/large-data.xml"),
-            number=num_of_executions,
-        )
-
-        print(
-            "\nAverage execution time for get_xml_data on 10,000 records: "
-            f"{round(execution_time / num_of_executions, 4)} seconds"
-        )
+    def test_get_xml_data_performance(self, benchmark):
+        benchmark(get_xml_data, "test-bucket", "dir/large-data.xml")

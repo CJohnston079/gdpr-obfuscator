@@ -1,5 +1,4 @@
 import json
-import timeit
 
 import pytest
 
@@ -57,23 +56,8 @@ class TestGetJSONDataPerformance:
     @pytest.fixture(scope="class", autouse=True)
     def set_up_s3_data(self, s3_bucket, test_large_data):
         s3, bucket_name = s3_bucket
-        data = test_large_data["shallow_list_based"]
+        data = json.dumps(test_large_data["shallow_list_based"])
+        s3.put_object(Bucket=bucket_name, Key="dir/largeData.json", Body=data)
 
-        s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/largeData.json",
-            Body=json.dumps(data),
-        )
-
-    def test_get_json_data_performance(self):
-        num_of_executions = 50
-
-        execution_time = timeit.timeit(
-            lambda: get_json_data("test-bucket", "dir/largeData.json"),
-            number=num_of_executions,
-        )
-
-        print(
-            "\nAverage execution time for get_json_data on 10,000 records: "
-            f"{round(execution_time / num_of_executions, 4)} seconds"
-        )
+    def test_get_json_data_performance(self, benchmark):
+        benchmark(get_json_data, "test-bucket", "dir/largeData.json")

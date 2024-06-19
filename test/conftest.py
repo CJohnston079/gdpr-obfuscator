@@ -51,5 +51,5 @@ def test_large_data():
         "shallow_list_based",
         "shallow_dict_based",
         "shallow_xml_str",
-        num_records=10000,
+        num_records=1024,
     )

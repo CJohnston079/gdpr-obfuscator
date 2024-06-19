@@ -1,5 +1,3 @@
-import timeit
-
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -82,23 +80,9 @@ class TestGetParquetDataPerformance:
         table = pa.Table.from_pandas(df)
         parquet_buffer = pa.BufferOutputStream()
         pq.write_table(table, parquet_buffer)
-        parquet_data = parquet_buffer.getvalue().to_pybytes()
+        pq_data = parquet_buffer.getvalue().to_pybytes()
 
-        s3.put_object(
-            Bucket=bucket_name,
-            Key="dir/large_parquet.pq",
-            Body=parquet_data,
-        )
+        s3.put_object(Bucket=bucket_name, Key="large_pq.parquet", Body=pq_data)
 
-    def test_get_parquet_data_performance(self):
-        num_of_executions = 50
-
-        execution_time = timeit.timeit(
-            lambda: get_parquet_data("test-bucket", "dir/large_parquet.pq"),
-            number=num_of_executions,
-        )
-
-        print(
-            "\nAverage execution time for get_parquet_data on 10,000 records: "
-            f"{round(execution_time / num_of_executions, 4)} seconds"
-        )
+    def test_get_parquet_data_performance(self, benchmark):
+        benchmark(get_parquet_data, "test-bucket", "large_pq.parquet")

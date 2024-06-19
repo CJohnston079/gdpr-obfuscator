@@ -1,5 +1,3 @@
-import timeit
-
 import pytest
 
 from src.exceptions import FormatDataError
@@ -48,15 +46,18 @@ class TestFormatDataErrorHandling:
 
 @pytest.mark.performance
 class TestFormatDataPerformance:
-    def test_format_data_performance(self, test_large_data):
+    def test_format_csv_data_performance(self, benchmark, test_large_data):
         data = test_large_data["shallow_dict_based"]
-        num_of_executions = 50
+        benchmark(format_data, data, "csv")
 
-        execution_time = timeit.timeit(
-            lambda: format_data(data), number=num_of_executions
-        )
+    def test_format_json_data_performance(self, benchmark, test_large_data):
+        data = test_large_data["shallow_dict_based"]
+        benchmark(format_data, data, "json")
 
-        print(
-            "\nAverage execution time for format_data on 10,000 records: "
-            f"{round(execution_time / num_of_executions, 4)} seconds"
-        )
+    def test_format_parquet_data_performance(self, benchmark, test_large_data):
+        data = test_large_data["shallow_dict_based"]
+        benchmark(format_data, data, "parquet")
+
+    def test_format_xml_data_performance(self, benchmark, test_xml_data):
+        data = test_xml_data["shallow_xml_data"]
+        benchmark(format_data, data, "xml")

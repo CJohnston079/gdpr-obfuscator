@@ -1,5 +1,3 @@
-import timeit
-
 import pytest
 
 from src.utils.file_readers.get_csv_data import get_csv_data
@@ -54,19 +52,7 @@ class TestGetCSVDataPerformance:
         rows = [",".join([row[key] for key in headers]) for row in data]
         csv_data = ",".join(headers) + "\n" + "\n".join(rows)
 
-        s3.put_object(
-            Bucket=bucket_name, Key="dir/large-csv.csv", Body=csv_data
-        )
+        s3.put_object(Bucket=bucket_name, Key="dir/large.csv", Body=csv_data)
 
-    def test_get_csv_data_performance(self):
-        num_of_executions = 50
-
-        execution_time = timeit.timeit(
-            lambda: get_csv_data("test-bucket", "dir/large-csv.csv"),
-            number=num_of_executions,
-        )
-
-        print(
-            "\nAverage execution time for get_csv_data on 10,000 records: "
-            f"{round(execution_time / num_of_executions, 4)} seconds"
-        )
+    def test_get_csv_data_performance(self, benchmark):
+        benchmark(get_csv_data, "test-bucket", "dir/large.csv")
