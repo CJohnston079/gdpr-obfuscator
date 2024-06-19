@@ -15,10 +15,17 @@ from src.exceptions import ObfuscationError
 from src.obfuscator import obfuscator
 
 
+def create_event(s3_uri, pii_fields=["name"]):
+    return {
+        "file_to_obfuscate": f"s3://{s3_uri}",
+        "pii_fields": pii_fields,
+    }
+
+
 @pytest.mark.smoke
 class TestObfuscator:
     @pytest.fixture(scope="module", autouse=True)
-    def set_up(self, s3_bucket, test_shallow_data, test_xml_data):
+    def place_test_files(self, s3_bucket, test_shallow_data, test_xml_data):
         s3, bucket_name = s3_bucket
 
         data = test_shallow_data["shallow_list_based"]
@@ -46,11 +53,7 @@ class TestObfuscator:
         rows = [",".join([row[key] for key in headers]) for row in data]
         csv_data_obf = ",".join(headers) + "\n" + "\n".join(rows)
 
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/file.csv",
-            "pii_fields": ["name"],
-        }
-
+        event = create_event("test-bucket/file.csv")
         result = obfuscator(event)
 
         result = textwrap.dedent(result).strip().replace("\r\n", "\n")
@@ -62,47 +65,32 @@ class TestObfuscator:
         obf_data = test_shallow_data["shallow_list_based_obfuscated"]
         json_data_obf = json.dumps(obf_data)
 
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/file.json",
-            "pii_fields": ["name"],
-        }
-
+        event = create_event("test-bucket/file.json")
         result = obfuscator(event)
+
         assert result == json_data_obf
 
-    def test_obfuscator_returns_obfuscated_parquet_data(
-        self, test_shallow_data
-    ):
+    def test_returns_obfuscated_parquet_data(self, test_shallow_data):
         df = pd.DataFrame(test_shallow_data["shallow_list_based_obfuscated"])
         table_obf = pa.Table.from_pandas(df)
         parquet_buffer_obf = pa.BufferOutputStream()
         pq.write_table(table_obf, parquet_buffer_obf)
         parquet_data_obf = parquet_buffer_obf.getvalue().to_pybytes()
 
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/file.parquet",
-            "pii_fields": ["name"],
-        }
-
+        event = create_event("test-bucket/file.parquet")
         result = obfuscator(event)
+
         assert result == parquet_data_obf
 
-    def test_obfuscator_returns_obfuscated_xml_data(self, test_xml_data):
+    def test_returns_obfuscated_xml_data(self, test_xml_data):
         xml_data_obf = test_xml_data["shallow_xml_str_obfuscated"]
-
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/file.xml",
-            "pii_fields": ["name"],
-        }
-
+        event = create_event("test-bucket/file.xml")
         result = obfuscator(event)
         assert result == xml_data_obf
 
 
 class TestObfuscatorCallsHelpersFunctions:
-    def test_obfuscator_calls_helper_functions(
-        self, mocker, test_shallow_data
-    ):
+    def test_calls_helper_functions(self, mocker, test_shallow_data):
         original_data = test_shallow_data["shallow_list_based"]
         obfuscated_data = test_shallow_data["shallow_list_based_obfuscated"]
 
@@ -115,12 +103,7 @@ class TestObfuscatorCallsHelpersFunctions:
         get_data.return_value = original_data
         obfuscate_fields.return_value = obfuscated_data
 
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file.csv",
-            "pii_fields": ["name"],
-        }
-
-        obfuscator(event)
+        obfuscator(create_event("bucket/data/file.csv"))
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
         get_data.assert_called_once_with("s3://bucket/data/file.csv", "csv")
@@ -134,10 +117,7 @@ class TestObfuscatorErrorHandling:
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_file_type.side_effect = Exception
 
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file.txt",
-            "pii_fields": ["name"],
-        }
+        event = create_event("bucket/data/file.txt")
 
         with pytest.raises(Exception):
             obfuscator(event)
@@ -152,10 +132,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_file_type.side_effect = AttributeError
 
-        event = {
-            "file_to_obfuscate": "s3://data/file",
-            "pii_fields": ["name"],
-        }
+        event = create_event("bucket/data/file")
 
         with pytest.raises(AttributeError):
             obfuscator(event)
@@ -167,10 +144,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
         get_data = mocker.patch("src.obfuscator.get_data")
         get_data.side_effect = GetDataError("Error loading data")
 
-        event = {
-            "file_to_obfuscate": "s3://erroneous-file",
-            "pii_fields": ["name"],
-        }
+        event = create_event("erroneous-file")
 
         with pytest.raises(GetDataError):
             obfuscator(event)
@@ -185,10 +159,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
             "Error obfuscating fields"
         )
 
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file.csv",
-            "pii_fields": ["name"],
-        }
+        event = create_event("test-bucket/data/file.csv")
 
         with pytest.raises(ObfuscationError):
             obfuscator(event)
@@ -202,10 +173,7 @@ class TestObfuscatorHandlesPropagatedUtilExceptions:
         format_data = mocker.patch("src.obfuscator.format_data")
         format_data.side_effect = FormatDataError("Error serialising data")
 
-        event = {
-            "file_to_obfuscate": "s3://bucket/data/file.csv",
-            "pii_fields": ["name"],
-        }
+        event = create_event("bucket/file.csv")
 
         with pytest.raises(FormatDataError):
             obfuscator(event)
@@ -233,10 +201,7 @@ class TestObfuscatorPerformance:
             Body=test_large_data["shallow_xml_str"],
         )
 
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/dir/large-file.xml",
-            "pii_fields": ["name"],
-        }
+        event = create_event("test-bucket/dir/large-file.xml")
 
         num_of_executions = 50
         average_execution_time = round(
