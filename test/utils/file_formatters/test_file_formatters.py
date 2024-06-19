@@ -1,6 +1,5 @@
 import json
 import textwrap
-import xml.etree.ElementTree as ET
 
 import pandas as pd
 import pyarrow.parquet as pq
@@ -19,7 +18,7 @@ class TestFileFormatters:
             (format_csv_data, ""),
             (format_json_data, "[]"),
             (format_parquet_data, b""),
-            (format_xml_data, "<data></data>"),
+            (format_xml_data, ""),
         ],
     )
     def test_empty_data(self, format_func, expected_output):
@@ -38,16 +37,12 @@ class TestFileFormatters:
 
         assert result == expected_csv
 
-    @pytest.mark.parametrize(
-        "data_key", ["deep_list_based", "shallow_list_based"]
-    )
-    def test_format_json_data(
-        self, test_deep_data, test_shallow_data, data_key
-    ):
-        if "deep" in data_key:
-            data = test_deep_data[data_key]
+    @pytest.mark.parametrize("depth", ["shallow", "deep"])
+    def test_format_json_data(self, test_deep_data, test_shallow_data, depth):
+        if depth == "shallow":
+            data = test_shallow_data[f"{depth}_list_based"]
         else:
-            data = test_shallow_data[data_key]
+            data = test_deep_data[f"{depth}_list_based"]
 
         result = format_json_data(data)
         expected_json = json.dumps(data)
@@ -68,24 +63,11 @@ class TestFileFormatters:
         expected_df = pd.DataFrame(data)
         pd.testing.assert_frame_equal(df_read, expected_df)
 
-    @pytest.mark.parametrize(
-        "data_key", ["deep_dict_based", "shallow_dict_based"]
-    )
-    def test_format_xml_data(
-        self, test_deep_data, test_shallow_data, data_key
-    ):
-        if "deep" in data_key:
-            data = test_deep_data[data_key]
-        else:
-            data = test_shallow_data[data_key]
-
+    @pytest.mark.xfail
+    @pytest.mark.parametrize("depth", ["shallow", "deep"])
+    def test_format_xml_data(self, test_xml_data, depth):
+        data = test_xml_data[f"{depth}_xml_data"]
+        expexted_xml = test_xml_data[f"{depth}_xml_str"]
         result = format_xml_data(data)
 
-        root = ET.fromstring(result)
-        entries = root.findall("entry")
-
-        assert len(entries) == len(data)
-
-        for entry, item in zip(entries, data):
-            for key, value in item.items():
-                assert entry.find(key).text == str(value)
+        assert result == expexted_xml

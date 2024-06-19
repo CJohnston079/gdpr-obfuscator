@@ -25,7 +25,7 @@ class TestFormatData:
         mock_file_handler.assert_called_once_with(["data"])
 
     def test_calls_returns_expected_data(self, mocker, test_xml_data):
-        data = test_xml_data["shallow_dict_based"]
+        data = test_xml_data["shallow_xml_data"]
         xml_string = test_xml_data["shallow_xml_str"]
 
         format_xml_data = mocker.patch("src.utils.format_data.format_xml_data")
