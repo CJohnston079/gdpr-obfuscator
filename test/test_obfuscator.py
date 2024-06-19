@@ -39,7 +39,6 @@ class TestObfuscator:
         obfuscate_fields.assert_called_once_with(original_data, ["name"])
         format_data.assert_called_once_with(obfuscated_data, "csv")
 
-    @pytest.mark.only
     def test_obfuscator_returns_expected_value(
         self, s3_bucket, test_shallow_data
     ):

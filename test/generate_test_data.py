@@ -95,4 +95,23 @@ entry_generators = {
         f"</contact>"
         f"</person>"
     ),
+    "shallow_xml_data": lambda data: {
+        "root": {
+            "person": {
+                "name": data["name"],
+                "age": data["age"],
+                "city": data["city"],
+            }
+        }
+    },
+    "deep_xml_data": lambda data: {
+        "root": {
+            "person": {
+                "name": data["name"],
+                "age": data["age"],
+                "city": data["city"],
+                "contact": {"email": data["email"], "phone": data["phone"]},
+            }
+        }
+    },
 }

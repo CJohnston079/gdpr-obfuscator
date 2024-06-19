@@ -37,9 +37,9 @@ def test_deep_data():
 @pytest.fixture(scope="session")
 def test_xml_data():
     return generate_data(
-        "shallow_dict_based",
+        "shallow_xml_data",
         "shallow_xml_str",
-        "deep_dict_based",
+        "deep_xml_data",
         "deep_xml_str",
     )
 
