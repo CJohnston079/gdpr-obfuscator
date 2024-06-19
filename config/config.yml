@@ -1,9 +1,0 @@
-aws:
-  region: eu-west-2
-  s3_bucket: bucket_name
-
-obfuscation:
-  file_type: csv
-  sensitive_fields:
-    - name
-    - email_address
