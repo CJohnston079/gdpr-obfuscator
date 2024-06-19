@@ -8,14 +8,17 @@ class TestGetFileType:
         result = get_file_type("s3://bucket/data/file.csv")
         assert isinstance(result, str)
 
+    @pytest.mark.smoke
     def test_returns_csv_for_csv_files(self):
         result = get_file_type("s3://bucket/data/file.csv")
         assert result == "csv"
 
+    @pytest.mark.smoke
     def test_returns_json_for_json_files(self):
         result = get_file_type("s3://bucket/data/file.json")
         assert result == "json"
 
+    @pytest.mark.smoke
     def test_returns_pq_and_parquet_for_pq_and_parquet_files(self):
         short_extension = get_file_type("s3://bucket/data/file.pq")
         long_extension = get_file_type("s3://bucket/data/file.parquet")

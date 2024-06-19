@@ -39,11 +39,13 @@ class TestGetJSONData:
         result = get_json_data("test-bucket", "dir/empty.json")
         assert result == []
 
+    @pytest.mark.smoke
     def test_returns_expected_shallow_data(self, test_shallow_data):
         shallow_data = test_shallow_data["shallow_list_based"]
         result = get_json_data("test-bucket", "dir/shallowData.json")
         assert result == shallow_data
 
+    @pytest.mark.smoke
     def test_returns_expected_deep_data(self, test_deep_data):
         deep_data = test_deep_data["deep_list_based"]
         result = get_json_data("test-bucket", "dir/deepData.json")

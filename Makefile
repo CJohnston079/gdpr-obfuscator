@@ -53,6 +53,9 @@ run-flake:
 unit-test:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v -m "not performance")
 
+mark-test-smoke:
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m smoke -v)
+
 mark-test-error-handling:
 	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
 

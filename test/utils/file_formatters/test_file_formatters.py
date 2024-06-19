@@ -24,6 +24,7 @@ class TestFileFormatters:
     def test_empty_data(self, format_func, expected_output):
         assert format_func([]) == expected_output
 
+    @pytest.mark.smoke
     def test_format_csv_data(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
         result = format_csv_data(data)
@@ -37,6 +38,7 @@ class TestFileFormatters:
 
         assert result == expected_csv
 
+    @pytest.mark.smoke
     @pytest.mark.parametrize("depth", ["shallow", "deep"])
     def test_format_json_data(self, test_deep_data, test_shallow_data, depth):
         if depth == "shallow":
@@ -49,6 +51,7 @@ class TestFileFormatters:
 
         assert result == expected_json
 
+    @pytest.mark.smoke
     def test_format_parquet_data(self, test_shallow_data, tmp_path):
         data = test_shallow_data["shallow_list_based"]
         parquet_file = tmp_path / "test.parquet"
@@ -63,6 +66,7 @@ class TestFileFormatters:
         expected_df = pd.DataFrame(data)
         pd.testing.assert_frame_equal(df_read, expected_df)
 
+    @pytest.mark.smoke
     @pytest.mark.parametrize("depth", ["shallow", "deep"])
     def test_format_xml_data(self, test_xml_data, depth):
         data = test_xml_data[f"{depth}_xml_data"]

@@ -37,12 +37,14 @@ class TestGetXMLData:
         result = get_xml_data("test-bucket", "dir/empty-file.xml")
         assert result == []
 
+    @pytest.mark.smoke
     def test_returns_expected_shallow_data(self, test_xml_data):
         shallow_data = test_xml_data["shallow_xml_data"]
         result = get_xml_data("test-bucket", "dir/shallow-data.xml")
 
         assert result == shallow_data
 
+    @pytest.mark.smoke
     def test_returns_expected_deep_data(self, test_xml_data):
         deep_data = test_xml_data["deep_xml_data"]
         result = get_xml_data("test-bucket", "dir/deep-data.xml")

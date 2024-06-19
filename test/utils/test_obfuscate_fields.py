@@ -23,6 +23,7 @@ class TestObfuscateFields:
 
         assert data == original_data
 
+    @pytest.mark.smoke
     def test_obfuscates_targeted_fields_in_shallow_data(
         self, test_shallow_data
     ):
@@ -32,7 +33,8 @@ class TestObfuscateFields:
 
         assert result == obfuscated_data
 
-    def test_obfuscates_targeted_fields_in_deep_array_based_data(
+    @pytest.mark.smoke
+    def test_obfuscates_targeted_fields_in_deep_list_based_data(
         self, test_deep_data
     ):
         data = test_deep_data["deep_list_based"]
@@ -41,7 +43,8 @@ class TestObfuscateFields:
 
         assert result == obfuscated_data
 
-    def test_obfuscates_targeted_fields_in_deep_object_based_data(
+    @pytest.mark.smoke
+    def test_obfuscates_targeted_fields_in_deep_dict_based_data(
         self, test_deep_data
     ):
         data = test_deep_data["deep_dict_based"]

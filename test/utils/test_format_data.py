@@ -24,6 +24,7 @@ class TestFormatData:
         format_data(["data"], file_type)
         mock_file_handler.assert_called_once_with(["data"])
 
+    @pytest.mark.smoke
     def test_calls_returns_expected_data(self, mocker, test_xml_data):
         data = test_xml_data["shallow_xml_data"]
         xml_string = test_xml_data["shallow_xml_str"]

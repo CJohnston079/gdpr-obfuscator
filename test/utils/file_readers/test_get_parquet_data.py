@@ -59,6 +59,7 @@ class TestGetParquetData:
         result = get_parquet_data("test-bucket", "dir/empty_parquet.parquet")
         assert result == []
 
+    @pytest.mark.smoke
     def test_returns_expected_data(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
         result = get_parquet_data("test-bucket", "dir/test_parquet.parquet")

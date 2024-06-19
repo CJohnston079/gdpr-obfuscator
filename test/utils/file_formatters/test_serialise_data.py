@@ -1,6 +1,8 @@
 import io
 import pickle
 
+import pytest
+
 from src.utils.file_formatters.serialise_data import serialise_data
 
 
@@ -27,6 +29,7 @@ class TestSerialiseDicts:
 
         assert deserialised_data == dicts
 
+    @pytest.mark.smoke
     def test_serialises_shallow_data(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
 
@@ -37,6 +40,7 @@ class TestSerialiseDicts:
 
         assert deserialised_data == data
 
+    @pytest.mark.smoke
     def test_serialises_deep_array_based_data(self, test_deep_data):
         data = test_deep_data["deep_list_based"]
 
@@ -47,6 +51,7 @@ class TestSerialiseDicts:
 
         assert deserialised_data == data
 
+    @pytest.mark.smoke
     def test_serialises_deep_object_based_data(self, test_deep_data):
         data = test_deep_data["deep_dict_based"]
 

@@ -36,6 +36,7 @@ class TestGetCSVData:
         result = get_csv_data("test-bucket", "dir/empty-file.csv")
         assert result == []
 
+    @pytest.mark.smoke
     def test_returns_expected_data(self, set_up_s3_data):
         data = set_up_s3_data
         result = get_csv_data("test-bucket", "dir/test-csv.csv")
