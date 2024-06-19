@@ -43,6 +43,7 @@ pydantic_core==2.18.2
 pyflakes==3.2.0
 Pygments==2.18.0
 pytest==8.2.2
+pytest-mock==3.14.0
 python-dateutil==2.9.0.post0
 pytz==2024.1
 PyYAML==6.0.1
