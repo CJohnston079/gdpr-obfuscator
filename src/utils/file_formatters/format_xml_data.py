@@ -1,6 +1,3 @@
-import xml.etree.ElementTree as ET
-
-
 def format_xml_data(data):
     """
     Formats a data structure into an XML string ready for writing.
@@ -12,12 +9,26 @@ def format_xml_data(data):
         str: An XML formatted string.
     """
     if data == []:
-        return "<data></data>"
+        return ""
 
-    root = ET.Element("data")
-    for item in data:
-        entry = ET.SubElement(root, "entry")
-        for key, value in item.items():
-            ET.SubElement(entry, key).text = str(value)
+    def dict_to_xml(tag, dictionary):
+        children = []
 
-    return ET.tostring(root, encoding="unicode", method="xml")
+        for key, val in dictionary.items():
+            if isinstance(val, dict):
+                children.append(dict_to_xml(key, val))
+            else:
+                children.append(f"<{key}>{val}</{key}>")
+
+        return f"<{tag}>{''.join(children)}</{tag}>"
+
+    root = list(data[0].keys())[0]
+    children = []
+
+    for entry in data:
+        child = list(entry[root].keys())[0]
+        children.append(dict_to_xml(child, entry[root][child]))
+
+    xml_str = f"<{root}>{''.join(children)}</{root}>"
+
+    return xml_str

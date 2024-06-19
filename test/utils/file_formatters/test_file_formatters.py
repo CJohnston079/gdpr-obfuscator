@@ -63,7 +63,6 @@ class TestFileFormatters:
         expected_df = pd.DataFrame(data)
         pd.testing.assert_frame_equal(df_read, expected_df)
 
-    @pytest.mark.xfail
     @pytest.mark.parametrize("depth", ["shallow", "deep"])
     def test_format_xml_data(self, test_xml_data, depth):
         data = test_xml_data[f"{depth}_xml_data"]
