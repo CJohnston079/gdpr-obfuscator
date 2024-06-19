@@ -41,6 +41,7 @@ def test_xml_data():
         "shallow_xml_str",
         "deep_xml_data",
         "deep_xml_str",
+        "shallow_xml_str_obfuscated",
     )
 
 

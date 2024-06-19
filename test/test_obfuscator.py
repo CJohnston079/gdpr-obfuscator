@@ -1,7 +1,11 @@
+import json
 import textwrap
 import timeit
 
 import boto3
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 import pytest
 from moto import mock_aws
 
@@ -11,7 +15,91 @@ from src.exceptions import ObfuscationError
 from src.obfuscator import obfuscator
 
 
+@pytest.mark.smoke
 class TestObfuscator:
+    @pytest.fixture(scope="module", autouse=True)
+    def set_up(self, s3_bucket, test_shallow_data, test_xml_data):
+        s3, bucket_name = s3_bucket
+
+        data = test_shallow_data["shallow_list_based"]
+        xml_data = test_xml_data["shallow_xml_str"]
+        json_data = json.dumps(data)
+
+        headers = data[0].keys()
+        rows = [",".join([row[key] for key in headers]) for row in data]
+        csv_data = ",".join(headers) + "\n" + "\n".join(rows)
+
+        df = pd.DataFrame(test_shallow_data["shallow_list_based"])
+        table = pa.Table.from_pandas(df)
+        parquet_buffer = pa.BufferOutputStream()
+        pq.write_table(table, parquet_buffer)
+        pq_data = parquet_buffer.getvalue().to_pybytes()
+
+        s3.put_object(Bucket=bucket_name, Key="file.csv", Body=csv_data)
+        s3.put_object(Bucket=bucket_name, Key="file.json", Body=json_data)
+        s3.put_object(Bucket=bucket_name, Key="file.parquet", Body=pq_data)
+        s3.put_object(Bucket=bucket_name, Key="file.xml", Body=xml_data)
+
+    def test_returns_obfuscated_csv_data(self, test_shallow_data):
+        data = test_shallow_data["shallow_list_based_obfuscated"]
+        headers = data[0].keys()
+        rows = [",".join([row[key] for key in headers]) for row in data]
+        csv_data_obf = ",".join(headers) + "\n" + "\n".join(rows)
+
+        event = {
+            "file_to_obfuscate": "s3://test-bucket/file.csv",
+            "pii_fields": ["name"],
+        }
+
+        result = obfuscator(event)
+
+        result = textwrap.dedent(result).strip().replace("\r\n", "\n")
+        expected = textwrap.dedent(csv_data_obf).strip()
+
+        assert result == expected
+
+    def test_returns_obfuscated_json_data(self, test_shallow_data):
+        obf_data = test_shallow_data["shallow_list_based_obfuscated"]
+        json_data_obf = json.dumps(obf_data)
+
+        event = {
+            "file_to_obfuscate": "s3://test-bucket/file.json",
+            "pii_fields": ["name"],
+        }
+
+        result = obfuscator(event)
+        assert result == json_data_obf
+
+    def test_obfuscator_returns_obfuscated_parquet_data(
+        self, test_shallow_data
+    ):
+        df = pd.DataFrame(test_shallow_data["shallow_list_based_obfuscated"])
+        table_obf = pa.Table.from_pandas(df)
+        parquet_buffer_obf = pa.BufferOutputStream()
+        pq.write_table(table_obf, parquet_buffer_obf)
+        parquet_data_obf = parquet_buffer_obf.getvalue().to_pybytes()
+
+        event = {
+            "file_to_obfuscate": "s3://test-bucket/file.parquet",
+            "pii_fields": ["name"],
+        }
+
+        result = obfuscator(event)
+        assert result == parquet_data_obf
+
+    def test_obfuscator_returns_obfuscated_xml_data(self, test_xml_data):
+        xml_data_obf = test_xml_data["shallow_xml_str_obfuscated"]
+
+        event = {
+            "file_to_obfuscate": "s3://test-bucket/file.xml",
+            "pii_fields": ["name"],
+        }
+
+        result = obfuscator(event)
+        assert result == xml_data_obf
+
+
+class TestObfuscatorCallsHelpersFunctions:
     def test_obfuscator_calls_helper_functions(
         self, mocker, test_shallow_data
     ):
@@ -38,40 +126,6 @@ class TestObfuscator:
         get_data.assert_called_once_with("s3://bucket/data/file.csv", "csv")
         obfuscate_fields.assert_called_once_with(original_data, ["name"])
         format_data.assert_called_once_with(obfuscated_data, "csv")
-
-    @pytest.mark.smoke
-    def test_obfuscator_returns_expected_value(
-        self, s3_bucket, test_shallow_data
-    ):
-        s3, bucket_name = s3_bucket
-        data = test_shallow_data["shallow_list_based"]
-        obf_data = test_shallow_data["shallow_list_based_obfuscated"]
-
-        headers = data[0].keys()
-        rows = [",".join([row[key] for key in headers]) for row in data]
-        obf_rows = [
-            ",".join([row[key] for key in headers]) for row in obf_data
-        ]
-        csv_data = ",".join(headers) + "\n" + "\n".join(rows)
-        obf_csv_data = ",".join(headers) + "\n" + "\n".join(obf_rows)
-
-        s3.put_object(
-            Bucket=bucket_name,
-            Key="data/file.csv",
-            Body=csv_data,
-        )
-
-        event = {
-            "file_to_obfuscate": "s3://test-bucket/data/file.csv",
-            "pii_fields": ["name"],
-        }
-
-        result = obfuscator(event)
-
-        result = textwrap.dedent(result).strip().replace("\r\n", "\n")
-        expected = textwrap.dedent(obf_csv_data).strip()
-
-        assert result == expected
 
 
 @pytest.mark.error_handling

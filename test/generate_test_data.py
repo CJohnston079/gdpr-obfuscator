@@ -21,7 +21,7 @@ def generate_data(*generate, num_records=3):
             data_structures[data_structure].append(entry)
 
     for data_structure in data_structures:
-        if data_structure.endswith("_xml_str"):
+        if "xml_str" in data_structure:
             xml_entries = "".join(data_structures[data_structure])
             data_structures[data_structure] = f"<root>{xml_entries}</root>"
 
@@ -114,4 +114,11 @@ entry_generators = {
             }
         }
     },
+    "shallow_xml_str_obfuscated": lambda data: (
+        f"<person>"
+        f"<name>***</name>"
+        f"<age>{data['age']}</age>"
+        f"<city>{data['city']}</city>"
+        f"</person>"
+    ),
 }
