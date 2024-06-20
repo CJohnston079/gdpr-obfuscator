@@ -10,6 +10,7 @@ from src.exceptions import FormatDataError
 from src.exceptions import GetDataError
 from src.exceptions import ObfuscationError
 from src.obfuscator import Obfuscator
+from src.utils.obfuscation_methods.tokenise import tokenise
 
 
 def create_event(s3_uri, pii_fields=["name"]):
@@ -93,8 +94,13 @@ class TestObfuscator:
 
 class TestObfuscatorCallsUtilFunctions:
     def test_calls_util_functions(self, obfuscator, mocker, test_shallow_data):
-        original_data = test_shallow_data["shallow_list_based"]
+        data = test_shallow_data["shallow_list_based"]
         obfuscated_data = test_shallow_data["shallow_list_based_obfuscated"]
+        obfuscation_options = {
+            "pii_fields": ["name"],
+            "obfuscation_method": tokenise,
+            "options": {},
+        }
 
         get_file_type = mocker.patch("src.obfuscator.get_file_type")
         get_data = mocker.patch("src.obfuscator.get_data")
@@ -102,14 +108,14 @@ class TestObfuscatorCallsUtilFunctions:
         format_data = mocker.patch("src.obfuscator.format_data")
 
         get_file_type.return_value = "csv"
-        get_data.return_value = original_data
+        get_data.return_value = data
         obfuscate_fields.return_value = obfuscated_data
 
         obfuscator.obfuscate(create_event("bucket/data/file.csv"))
 
         get_file_type.assert_called_once_with("s3://bucket/data/file.csv")
         get_data.assert_called_once_with("s3://bucket/data/file.csv", "csv")
-        obfuscate_fields.assert_called_once_with(original_data, ["name"])
+        obfuscate_fields.assert_called_once_with(data, obfuscation_options)
         format_data.assert_called_once_with(obfuscated_data, "csv")
 
 

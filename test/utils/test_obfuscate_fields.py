@@ -5,12 +5,21 @@ import pytest
 
 from src.exceptions import ObfuscationError
 from src.utils.obfuscate_fields import obfuscate_fields
+from src.utils.obfuscation_methods.tokenise import tokenise
+
+
+def create_options(pii_fields=["name"]):
+    return {
+        "pii_fields": pii_fields,
+        "obfuscation_method": tokenise,
+        "options": {},
+    }
 
 
 class TestObfuscateFields:
     def test_returns_list_of_dictionaries(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
-        result = obfuscate_fields(data, ["name"])
+        result = obfuscate_fields(data, create_options())
 
         assert isinstance(result, list)
         assert all(isinstance(row, dict) for row in result)
@@ -18,7 +27,7 @@ class TestObfuscateFields:
     def test_input_data_not_mutated(self, test_shallow_data):
         data = test_shallow_data["shallow_list_based"]
         original_data = copy.deepcopy(data)
-        obfuscate_fields(data, ["name"])
+        obfuscate_fields(data, create_options())
 
         assert data == original_data
 
@@ -28,7 +37,7 @@ class TestObfuscateFields:
     ):
         data = test_shallow_data["shallow_list_based"]
         obfuscated_data = test_shallow_data["shallow_list_based_obfuscated"]
-        result = obfuscate_fields(data, ["name"])
+        result = obfuscate_fields(data, create_options())
 
         assert result == obfuscated_data
 
@@ -38,7 +47,8 @@ class TestObfuscateFields:
     ):
         data = test_deep_data["deep_list_based"]
         obfuscated_data = test_deep_data["deep_list_based_obfuscated"]
-        result = obfuscate_fields(data, ["name", "email", "phone"])
+        options = create_options(["name", "email", "phone"])
+        result = obfuscate_fields(data, options)
 
         assert result == obfuscated_data
 
@@ -48,7 +58,8 @@ class TestObfuscateFields:
     ):
         data = test_deep_data["deep_dict_based"]
         obfuscated_data = test_deep_data["deep_dict_based_obfuscated"]
-        result = obfuscate_fields(data, ["name", "email", "phone"])
+        options = create_options(["name", "email", "phone"])
+        result = obfuscate_fields(data, options)
 
         assert result == obfuscated_data
 
@@ -57,7 +68,7 @@ class TestObfuscateFields:
 class TestObfuscateFieldsErrorHandling:
     def test_raises_attribute_error(self):
         with pytest.raises(AttributeError):
-            obfuscate_fields("invalid input", ["name"])
+            obfuscate_fields("invalid input", create_options())
 
     def test_raises_recursion_error(self):
         recursion_limit = sys.getrecursionlimit()
@@ -67,15 +78,15 @@ class TestObfuscateFieldsErrorHandling:
             nested_data = [{"nested": nested_data}]
 
         with pytest.raises(RecursionError):
-            obfuscate_fields(nested_data, ["nested"])
+            obfuscate_fields(nested_data, create_options(["nested"]))
 
     def test_raises_obfuscation_error_for_other_exceptions(self, mocker):
         with pytest.raises(ObfuscationError):
-            obfuscate_fields(Exception, ["name"])
+            obfuscate_fields(Exception, create_options())
 
 
 @pytest.mark.performance
 class TestObfuscateFieldsPerformance:
     def test_obfuscate_fields_performance(self, benchmark, test_large_data):
         data = test_large_data["shallow_dict_based"]
-        benchmark(obfuscate_fields, data, ["name"])
+        benchmark(obfuscate_fields, data, create_options())
