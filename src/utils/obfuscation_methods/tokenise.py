@@ -1,2 +1,2 @@
-def tokenise():
-    pass
+def tokenise(field, options):
+    return options.get("token", "***")
