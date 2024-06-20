@@ -1,7 +1,7 @@
 from src.exceptions import ObfuscationError
 
 
-def obfuscate_fields(data, fields):
+def obfuscate_fields(data, options):
     """
     Obfuscates targeted fields in a list of dictionaries.
 
@@ -23,17 +23,8 @@ def obfuscate_fields(data, fields):
         obfuscated_data = []
 
         for record in data:
-            obfuscated_field = {}
-
-            for key, val in record.items():
-                if isinstance(val, list):
-                    obfuscated_field[key] = obfuscate_fields(val, fields)
-                elif isinstance(val, dict):
-                    obfuscated_field[key] = obfuscate_fields([val], fields)[0]
-                else:
-                    obfuscated_field[key] = "***" if key in fields else val
-
-            obfuscated_data.append(obfuscated_field)
+            obfuscated_record = obfuscate_record(record, options)
+            obfuscated_data.append(obfuscated_record)
 
         return obfuscated_data
 
@@ -43,3 +34,27 @@ def obfuscate_fields(data, fields):
         raise RecursionError("maximum recursion depth exceeded.")
     except Exception as e:
         raise ObfuscationError(e)
+
+
+def obfuscate_record(record, options):
+    obfuscated_record = {}
+
+    for field, val in record.items():
+        obfuscated_record[field] = obfuscate_field(field, val, options)
+
+    return obfuscated_record
+
+
+def obfuscate_field(field, val, options):
+    pii_fields = options["pii_fields"]
+    obfuscation_method = options["obfuscation_method"]
+    obfuscation_options = options["options"]
+
+    if isinstance(val, list):
+        return obfuscate_fields(val, options)
+    elif isinstance(val, dict):
+        return obfuscate_record(val, options)
+    elif field in pii_fields:
+        return obfuscation_method(field, obfuscation_options)
+    else:
+        return val

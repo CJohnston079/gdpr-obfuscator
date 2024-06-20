@@ -9,21 +9,23 @@ from src.utils.format_data import format_data
 from src.utils.get_data import get_data
 from src.utils.get_file_type import get_file_type
 from src.utils.obfuscate_fields import obfuscate_fields
+from src.utils.obfuscation_methods.tokenise import tokenise
 
 
 class Obfuscator:
-    def __init__(self, log_level=logging.DEBUG):
+    def __init__(self, log_level=logging.DEBUG, method=tokenise, **options):
         logging.basicConfig(level=log_level)
         self.logger = logging.getLogger(__name__)
-
         self.log_error = lambda msg, *args, **kwargs: (
             self.logger.error(msg, exc_info=True, *args, **kwargs)
         )
+        self.obfuscation_method = method
+        self.method_options = options.get("options", {})
 
     def obfuscate(self, event):
         """
-        Obfuscates personally identifiable information (PII) fields in a
-        data file located in an AWS S3 bucket.
+        Obfuscates personally identifiable information (PII) fields in a data
+        file located in an AWS S3 bucket.
 
         Args:
             event (dict): A dictionary containing the following keys:
@@ -46,11 +48,15 @@ class Obfuscator:
         """
         try:
             file_path = event["file_to_obfuscate"]
-            fields_to_obfuscate = event["pii_fields"]
             file_type = get_file_type(file_path)
+            obfuscation_options = {
+                "pii_fields": event["pii_fields"],
+                "obfuscation_method": self.obfuscation_method,
+                "options": self.method_options,
+            }
 
             data = get_data(file_path, file_type)
-            obfuscated_data = obfuscate_fields(data, fields_to_obfuscate)
+            obfuscated_data = obfuscate_fields(data, obfuscation_options)
             formatted_data = format_data(obfuscated_data, file_type)
 
             return formatted_data
