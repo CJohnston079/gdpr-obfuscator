@@ -5,19 +5,25 @@ def obfuscate_fields(data, options):
     """
     Obfuscates targeted fields in a list of dictionaries.
 
-    This function takes a list of dictionaries representing records (data) and
-    a list of fields to obfuscate. It returns a new list of dictionaries where
-    the specified fields are replaced with "***", retaining the original
-    structure of the data.
+    Takes a list of dictionaries representing records (data) and an options
+    dictionary. The options dictionary should container the key "pii_fields",
+    which are the fields to be obfuscated. Returns a new list of dictionaries
+    where the pii_fields have been obfuscated, which by default tokenises them
+    with a triple asterisk string ("***").
 
     Args:
         data (list of dict): A list of dictionaries representing records, where
             each dict contains key-value pairs for the fields of the record.
-        fields (list of str): A list of strings of the fields to obfuscate.
+        options (dict): A dictionary containing the following keys:
+            pii_fields (str): A list of strings of the fields to obfuscated.
+            obfuscation_method (func): The method to call on fields to be
+                obfuscated.
+            options (dict): A dictionary containing options for the obfuscation
+                method.
 
     Returns:
         list of dict: A new list of dictionaries where the targeted fields are
-        replaced with "***".
+        obfuscated using the obfuscation_method in options.
     """
     try:
         obfuscated_data = []

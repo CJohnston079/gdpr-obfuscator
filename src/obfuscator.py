@@ -29,9 +29,7 @@ class Obfuscator:
 
         Args:
             event (dict): A dictionary containing the following keys:
-                file_to_obfuscate (str): The AWS S3 URI of the file to be
-                    obfuscated.
-                pii_fields (list): A list of strings of PII fields to be
+                file_to_obfuscate (str): The AWS S3 URI of the data to be
                     obfuscated.
 
         Returns:
