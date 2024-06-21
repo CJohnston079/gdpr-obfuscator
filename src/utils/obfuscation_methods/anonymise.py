@@ -1,60 +1,68 @@
 import random
+import re
 
 from faker import Faker
 
-faker = Faker("en_GB")
+from src.utils.obfuscation_methods.tokenise import tokenise
+
+fake = Faker("en_GB")
 
 
 pii_fields = {
-    "name": faker.name(),
-    "firstname": faker.first_name(),
-    "lastname": faker.last_name(),
-    "surname": faker.last_name(),
-    "email": faker.email(),
-    "emailaddress": faker.email(),
-    "gender": random.choice(["M", "F", "TG", "NB", "AG", "BI"]),
+    "name": fake.name(),
+    "firstname": fake.first_name(),
+    "lastname": fake.last_name(),
+    "surname": fake.last_name(),
+    "email": fake.email(),
+    "emailaddress": fake.email(),
+    "workemail": fake.email(),
+    "gender": random.choices(
+        ["F", "M", "T", "N"], [0.45, 0.45, 0.05, 0.05], k=1
+    )[0],
     "age": lambda: random.randint(18, 66),
-    "birthday": faker.date_of_birth(),
-    "dateofbirth": faker.date_of_birth(),
-    "dob": faker.date_of_birth(),
-    "phone": faker.phone_number(),
-    "mobile": faker.phone_number(),
-    "landline": faker.phone_number(),
-    "workphone": faker.phone_number(),
-    "hometelephone": faker.phone_number(),
-    "worktelephone": faker.phone_number(),
-    "mobilephone": faker.phone_number(),
-    "homephone": faker.phone_number(),
-    "phonenumber": faker.phone_number(),
-    "address": faker.address(),
-    "housenumber": faker.building_number(),
-    "homeaddress": faker.address(),
-    "workaddress": faker.address(),
-    "buildingnumber": faker.building_number(),
-    "street": faker.street_address(),
-    "streetaddress": faker.address(),
-    "town": faker.city(),
-    "city": faker.city(),
-    "county": faker.county(),
-    "postcode": faker.postcode(),
-    "nin": faker.ssn(),
-    "ssn": faker.ssn(),
-    "ninumber": faker.ssn(),
-    "nationalinsurancenumber": faker.ssn(),
-    "socialsecuritynumber": faker.ssn(),
-    "cardnumber": faker.credit_card_number(),
-    "debitcard": faker.credit_card_number(),
-    "creditcard": faker.credit_card_number(),
-    "creditcardnumber": faker.credit_card_number(),
-    "debitcardnumber": faker.credit_card_number(),
-    "ip": faker.ipv4(),
-    "ipaddress": faker.ipv4(),
-    "cookieid": faker.uuid4(),
-    "advertisingidentifier": faker.uuid4(),
-    "mobilelocationdata": faker.location_on_land(),
-    "locationdata": faker.location_on_land(),
+    "birthday": fake.date_of_birth(),
+    "dateofbirth": fake.date_of_birth(),
+    "dob": fake.date_of_birth(),
+    "phone": fake.phone_number(),
+    "mobile": fake.phone_number(),
+    "landline": fake.phone_number(),
+    "workphone": fake.phone_number(),
+    "hometelephone": fake.phone_number(),
+    "worktelephone": fake.phone_number(),
+    "mobilephone": fake.phone_number(),
+    "homephone": fake.phone_number(),
+    "phonenumber": fake.phone_number(),
+    "address": fake.address(),
+    "housenumber": fake.building_number(),
+    "homeaddress": fake.address(),
+    "workaddress": fake.address(),
+    "buildingnumber": fake.building_number(),
+    "street": fake.street_address(),
+    "streetaddress": fake.address(),
+    "town": fake.city(),
+    "city": fake.city(),
+    "county": fake.county(),
+    "postcode": fake.postcode(),
+    "nin": fake.ssn(),
+    "ssn": fake.ssn(),
+    "ninumber": fake.ssn(),
+    "nationalinsurancenumber": fake.ssn(),
+    "socialsecuritynumber": fake.ssn(),
+    "cardnumber": fake.credit_card_number(),
+    "debitcard": fake.credit_card_number(),
+    "creditcard": fake.credit_card_number(),
+    "creditcardnumber": fake.credit_card_number(),
+    "debitcardnumber": fake.credit_card_number(),
+    "ip": fake.ipv4(),
+    "ipaddress": fake.ipv4(),
+    "cookieid": fake.uuid4(),
+    "advertisingidentifier": fake.uuid4(),
+    "mobilelocationdata": fake.location_on_land(),
+    "locationdata": fake.location_on_land(),
 }
 
 
 def anonymise(field, options):
-    pass
+    cleaned_field = re.sub(r"[ \-_]", "", field).lower()
+    value = pii_fields.get(cleaned_field, tokenise(field, options))
+    return value

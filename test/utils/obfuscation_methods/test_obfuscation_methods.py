@@ -13,7 +13,6 @@ class TestTokenise:
         assert tokenise("name", {"token": "custom-token"}) == "custom-token"
 
 
-@pytest.mark.xfail
 class TestAnonymise:
     @pytest.mark.parametrize(
         "field, expected",
