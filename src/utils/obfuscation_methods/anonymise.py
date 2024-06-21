@@ -19,7 +19,7 @@ pii_fields = {
     "gender": random.choices(
         ["F", "M", "T", "N"], [0.45, 0.45, 0.05, 0.05], k=1
     )[0],
-    "age": lambda: random.randint(18, 66),
+    "age": random.randint(18, 66),
     "birthday": fake.date_of_birth(),
     "dateofbirth": fake.date_of_birth(),
     "dob": fake.date_of_birth(),
