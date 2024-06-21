@@ -9,17 +9,23 @@ from src.utils.format_data import format_data
 from src.utils.get_data import get_data
 from src.utils.get_file_type import get_file_type
 from src.utils.obfuscate_fields import obfuscate_fields
+from src.utils.obfuscation_methods.anonymise import anonymise
 from src.utils.obfuscation_methods.tokenise import tokenise
 
 
 class Obfuscator:
-    def __init__(self, log_level=logging.DEBUG, method=tokenise, **options):
+    OBF_METHODS = {
+        "tokenise": tokenise,
+        "anonymise": anonymise,
+    }
+
+    def __init__(self, log_level=logging.DEBUG, method="tokenise", **options):
         logging.basicConfig(level=log_level)
         self.logger = logging.getLogger(__name__)
         self.log_error = lambda msg, *args, **kwargs: (
             self.logger.error(msg, exc_info=True, *args, **kwargs)
         )
-        self.obfuscation_method = method
+        self.obfuscation_method = self.OBF_METHODS.get(method, tokenise)
         self.method_options = options.get("options", {})
 
     def obfuscate(self, event):
