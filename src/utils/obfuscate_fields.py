@@ -1,4 +1,6 @@
 from src.exceptions import ObfuscationError
+from src.utils.data_generation.generate_pii import generate_pii
+from src.utils.obfuscation_methods.anonymise import anonymise
 
 
 def obfuscate_fields(data, options):
@@ -29,6 +31,9 @@ def obfuscate_fields(data, options):
         obfuscated_data = []
 
         for record in data:
+            if options["obfuscation_method"] == anonymise:
+                options["options"]["anonymous_pii_fields"] = generate_pii()
+
             obfuscated_record = obfuscate_record(record, options)
             obfuscated_data.append(obfuscated_record)
 
