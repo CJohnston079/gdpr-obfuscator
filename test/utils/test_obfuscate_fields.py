@@ -5,14 +5,16 @@ import pytest
 
 from src.exceptions import ObfuscationError
 from src.utils.obfuscate_fields import obfuscate_fields
+from src.utils.obfuscation_methods.anonymise import anonymise
 from src.utils.obfuscation_methods.tokenise import tokenise
 
 
-def create_options(pii_fields=["name"]):
+def create_options(pii_fields=["name"], obf_method=tokenise):
     return {
         "pii_fields": pii_fields,
-        "obfuscation_method": tokenise,
+        "obfuscation_method": obf_method,
         "options": {},
+        "anonymous_pii_fields": {"name": "Aaron Baker"},
     }
 
 
@@ -62,6 +64,24 @@ class TestObfuscateFields:
         result = obfuscate_fields(data, options)
 
         assert result == obfuscated_data
+
+
+class TestObfuscateFieldsAnonymisesData:
+    def test_calls_anonymise_if_obf_method_is_anonymise(
+        self, mocker, test_shallow_data
+    ):
+        data = test_shallow_data["shallow_list_based"]
+        anonymise = mocker.patch("src.utils.obfuscate_fields.anonymise")
+        obfuscate_fields(data, create_options(obf_method=anonymise))
+        anonymise.assert_called
+
+    def test_obfuscate_fields_calls_generate_pii_if_obf_method_is_anonymise(
+        self, mocker, test_shallow_data
+    ):
+        data = test_shallow_data["shallow_list_based"]
+        generate_pii = mocker.patch("src.utils.obfuscate_fields.generate_pii")
+        obfuscate_fields(data, create_options(obf_method=anonymise))
+        generate_pii.assert_called
 
 
 @pytest.mark.error_handling
