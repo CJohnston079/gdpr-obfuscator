@@ -51,22 +51,22 @@ run-flake:
 	$(call execute_in_env, flake8  ./src/*.py ./src/*/*.py ./test/*.py ./test/*/*.py)
 
 unit-test:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest $(filter-out $@,$(MAKECMDGOALS)) -v -m "not performance")
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src pytest $(filter-out $@,$(MAKECMDGOALS)) -v -m "not performance")
 
 mark-test-smoke:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m smoke -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src pytest -m smoke -v)
 
 mark-test-error-handling:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m error_handling -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src pytest -m error_handling -v)
 
 mark-test-performance:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m performance -sv)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src pytest -m performance -sv)
 
 mark-test-only:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest -m only -v)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src pytest -m only -v)
 
 check-coverage:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} coverage run --omit 'venv/*' -m pytest && coverage report -m)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:$(WD)/src coverage run --omit 'venv/*' -m pytest && coverage report -m)
 
 pre-commit:
 	$(call execute_in_env, pre-commit run --all-files)

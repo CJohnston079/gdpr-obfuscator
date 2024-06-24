@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from src.exceptions import ObfuscationError
+from exceptions import ObfuscationError
 from src.utils.obfuscate_fields import obfuscate_fields
 from src.utils.obfuscation_methods.anonymise import anonymise
 from src.utils.obfuscation_methods.tokenise import tokenise

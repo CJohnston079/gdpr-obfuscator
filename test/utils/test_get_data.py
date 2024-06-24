@@ -1,7 +1,7 @@
 import pytest
 from botocore.exceptions import ClientError
 
-from src.exceptions import GetDataError
+from exceptions import GetDataError
 from src.utils.get_data import get_data
 
 

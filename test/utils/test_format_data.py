@@ -1,6 +1,6 @@
 import pytest
 
-from src.exceptions import FormatDataError
+from exceptions import FormatDataError
 from src.utils.format_data import format_data
 
 

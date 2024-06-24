@@ -6,11 +6,11 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from src.exceptions import FormatDataError
-from src.exceptions import GetDataError
-from src.exceptions import ObfuscationError
+from exceptions import FormatDataError
+from exceptions import GetDataError
+from exceptions import ObfuscationError
 from src.obfuscator import Obfuscator
-from src.utils.obfuscation_methods.tokenise import tokenise
+from utils.obfuscation_methods.tokenise import tokenise
 
 
 def create_event(s3_uri, pii_fields=["name"]):
