@@ -1,6 +1,6 @@
 import re
 
-from src.utils.obfuscation_methods.tokenise import tokenise
+from .tokenise import tokenise
 
 
 def anonymise(field, options):

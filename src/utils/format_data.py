@@ -1,9 +1,9 @@
-from src.exceptions import FormatDataError
-from src.utils.file_formatters.format_csv_data import format_csv_data
-from src.utils.file_formatters.format_json_data import format_json_data
-from src.utils.file_formatters.format_parquet_data import format_parquet_data
-from src.utils.file_formatters.format_xml_data import format_xml_data
-from src.utils.file_formatters.serialise_data import serialise_data
+from .file_formatters.format_csv_data import format_csv_data
+from .file_formatters.format_json_data import format_json_data
+from .file_formatters.format_parquet_data import format_parquet_data
+from .file_formatters.format_xml_data import format_xml_data
+from .file_formatters.serialise_data import serialise_data
+from exceptions import FormatDataError
 
 
 def format_data(data, file_type=None):

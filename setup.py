@@ -20,5 +20,11 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    install_requires=["botocore==1.34.120", "pandas==2.2.2", "Faker==25.8.0"],
+    install_requires=[
+        "boto3==1.34.120",
+        "botocore==1.34.120",
+        "pandas==2.2.2",
+        "pyarrow==16.1.0",
+        "Faker==25.8.0",
+    ],
 )

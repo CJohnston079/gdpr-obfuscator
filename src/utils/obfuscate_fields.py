@@ -1,6 +1,6 @@
-from src.exceptions import ObfuscationError
-from src.utils.data_generation.generate_pii import generate_pii
-from src.utils.obfuscation_methods.anonymise import anonymise
+from .data_generation.generate_pii import generate_pii
+from .obfuscation_methods.anonymise import anonymise
+from exceptions import ObfuscationError
 
 
 def obfuscate_fields(data, options):

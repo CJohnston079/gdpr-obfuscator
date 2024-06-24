@@ -2,15 +2,15 @@ import logging
 
 from botocore.exceptions import ClientError
 
-from src.exceptions import FormatDataError
-from src.exceptions import GetDataError
-from src.exceptions import ObfuscationError
-from src.utils.format_data import format_data
-from src.utils.get_data import get_data
-from src.utils.get_file_type import get_file_type
-from src.utils.obfuscate_fields import obfuscate_fields
-from src.utils.obfuscation_methods.anonymise import anonymise
-from src.utils.obfuscation_methods.tokenise import tokenise
+from exceptions import FormatDataError
+from exceptions import GetDataError
+from exceptions import ObfuscationError
+from utils.format_data import format_data
+from utils.get_data import get_data
+from utils.get_file_type import get_file_type
+from utils.obfuscate_fields import obfuscate_fields
+from utils.obfuscation_methods.anonymise import anonymise
+from utils.obfuscation_methods.tokenise import tokenise
 
 
 class Obfuscator:
