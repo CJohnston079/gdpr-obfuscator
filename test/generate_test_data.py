@@ -23,7 +23,7 @@ def generate_data(*generate, num_records=3):
     for data_structure in data_structures:
         if "xml_str" in data_structure:
             xml_entries = "".join(data_structures[data_structure])
-            data_structures[data_structure] = f"<root>{xml_entries}</root>"
+            data_structures[data_structure] = f"<root>\n{xml_entries}</root>"
 
     return data_structures
 
@@ -78,22 +78,22 @@ entry_generators = {
         }
     },
     "shallow_xml_str": lambda data: (
-        f"<person>"
-        f"<name>{data['name']}</name>"
-        f"<age>{data['age']}</age>"
-        f"<city>{data['city']}</city>"
-        f"</person>"
+        f"  <person>\n"
+        f"    <name>{data['name']}</name>\n"
+        f"    <age>{data['age']}</age>\n"
+        f"    <city>{data['city']}</city>\n"
+        f"  </person>\n"
     ),
     "deep_xml_str": lambda data: (
-        f"<person>"
-        f"<name>{data['name']}</name>"
-        f"<age>{data['age']}</age>"
-        f"<city>{data['city']}</city>"
-        f"<contact>"
-        f"<email>{data['email']}</email>"
-        f"<phone>{data['phone']}</phone>"
-        f"</contact>"
-        f"</person>"
+        f"  <person>\n"
+        f"    <name>{data['name']}</name>\n"
+        f"    <age>{data['age']}</age>\n"
+        f"    <city>{data['city']}</city>\n"
+        f"    <contact>\n"
+        f"      <email>{data['email']}</email>\n"
+        f"      <phone>{data['phone']}</phone>\n"
+        f"    </contact>\n"
+        f"  </person>\n"
     ),
     "shallow_xml_data": lambda data: {
         "root": {
@@ -115,10 +115,10 @@ entry_generators = {
         }
     },
     "shallow_xml_str_obfuscated": lambda data: (
-        f"<person>"
-        f"<name>***</name>"
-        f"<age>{data['age']}</age>"
-        f"<city>{data['city']}</city>"
-        f"</person>"
+        f"  <person>\n"
+        f"    <name>***</name>\n"
+        f"    <age>{data['age']}</age>\n"
+        f"    <city>{data['city']}</city>\n"
+        f"  </person>\n"
     ),
 }
