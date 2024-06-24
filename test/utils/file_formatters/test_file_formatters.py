@@ -47,7 +47,7 @@ class TestFileFormatters:
             data = test_deep_data[f"{depth}_list_based"]
 
         result = format_json_data(data)
-        expected_json = json.dumps(data)
+        expected_json = json.dumps(data, indent=2)
 
         assert result == expected_json
 

@@ -66,7 +66,7 @@ class TestObfuscator:
 
     def test_returns_obfuscated_json_data(self, obfuscator, test_shallow_data):
         obf_data = test_shallow_data["shallow_list_based_obfuscated"]
-        json_data_obf = json.dumps(obf_data)
+        json_data_obf = json.dumps(obf_data, indent=2)
 
         event = create_event("test-bucket/file.json")
         result = obfuscator.obfuscate(event)
