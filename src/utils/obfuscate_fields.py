@@ -33,7 +33,7 @@ def obfuscate_fields(data, options):
 
         for record in data:
             if options["obfuscation_method"] == anonymise:
-                options["options"]["anonymous_pii_fields"] = generate_pii()
+                options["options"]["_anonymous_pii_fields"] = generate_pii()
 
             obfuscated_record = obfuscate_record(record, options)
             obfuscated_data.append(obfuscated_record)

@@ -19,7 +19,7 @@ def anonymise(field, options):
         str: A randomly generated value from pii_fields, or a token if a value
             is not found in pii_fields.
     """
-    pii_fields = options["anonymous_pii_fields"]
+    pii_fields = options["_anonymous_pii_fields"]
     cleaned_field = re.sub(r"[ \-_]", "", field).lower()
     value = pii_fields.get(cleaned_field, tokenise(field, options))
     return value

@@ -31,7 +31,7 @@ class TestAnonymise:
     @pytest.fixture(scope="function")
     def pii_fields(self):
         return {
-            "anonymous_pii_fields": {
+            "_anonymous_pii_fields": {
                 "firstname": "Aaron",
                 "lastname": "Baker",
                 "email": "aaron480@yahoo.co.uk",
@@ -48,6 +48,6 @@ class TestAnonymise:
 
     def test_returns_token_if_pii_field_not_found(self):
         assert (
-            anonymise("unexpected_field", {"anonymous_pii_fields": {}})
+            anonymise("unexpected_field", {"_anonymous_pii_fields": {}})
             == "***"
         )

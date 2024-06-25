@@ -14,7 +14,7 @@ def create_options(pii_fields=["name"], obf_method=tokenise):
         "pii_fields": pii_fields,
         "obfuscation_method": obf_method,
         "options": {},
-        "anonymous_pii_fields": {"name": "Aaron Baker"},
+        "_anonymous_pii_fields": {"name": "Aaron Baker"},
     }
 
 
