@@ -66,6 +66,16 @@ class TestObfuscateFields:
         assert result == obfuscated_data
 
 
+class TestObfuscateFieldsMasksData:
+    def test_calls_anonymise_if_obf_method_is_anonymise(
+        self, mocker, test_shallow_data
+    ):
+        data = test_shallow_data["shallow_list_based"]
+        mask = mocker.patch("src.utils.obfuscate_fields.mask")
+        obfuscate_fields(data, create_options(obf_method=mask))
+        mask.assert_called
+
+
 class TestObfuscateFieldsAnonymisesData:
     def test_calls_anonymise_if_obf_method_is_anonymise(
         self, mocker, test_shallow_data
