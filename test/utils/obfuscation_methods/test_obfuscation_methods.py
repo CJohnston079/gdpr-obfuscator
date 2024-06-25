@@ -1,6 +1,7 @@
 import pytest
 
 from src.utils.obfuscation_methods.anonymise import anonymise
+from src.utils.obfuscation_methods.mask import mask
 from src.utils.obfuscation_methods.tokenise import tokenise
 
 
@@ -10,6 +11,20 @@ class TestTokenise:
 
     def test_returns_custom_token_if_token_in_options_dict(self):
         assert tokenise("name", {"token": "custom-token"}) == "custom-token"
+
+
+class TestMask:
+    def test_returns_token_of_same_length_as_input(self):
+        result = mask("name", {"_val": "Aaron"})
+        assert result == "*****"
+
+    def test_returns_custom_token_of_same_length_as_input(self):
+        result = mask("name", {"_val": "Aaron", "token": "-"})
+        assert result == "-----"
+
+    def test_returns_single_token_for_empty_val(self):
+        result = mask("name", {"_val": None})
+        assert result == "*"
 
 
 class TestAnonymise:
