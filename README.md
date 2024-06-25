@@ -72,6 +72,42 @@ This would return:
 | 2   | ~    | ~       | 2024-03-31 | java development     |
 | 3   | ~    | ~       | 2024-01-26 | java development     |
 
+### Masking
+
+Masking is the process of obscuring a field by replacing all characters with a single token. It is commonly used for sensitive information such as credit card numbers and passwords.
+
+To use the `mask` method, initialise `Obfuscator` with `"mask"` as the `method` argument:
+
+```python
+obfuscator = Obfuscator(method="mask")
+```
+
+This will obfuscate the data as show below:
+
+| id  | name          | contact                   | cohort     | course               |
+| --- | ------------- | ------------------------- | ---------- | -------------------- |
+| 1   | Claire Burton | c.burton639@hotmail.co.uk | 2024-05-31 | software development |
+| 2   | June Mistry   | j.mistry354@outlook.com   | 2024-03-31 | java development     |
+| 3   | Hilary Welch  | hilary244@hotmail.co.uk   | 2024-01-26 | java development     |
+
+| id  | name                       | contact                                            | cohort     | course               |
+| --- | -------------------------- | -------------------------------------------------- | ---------- | -------------------- |
+| 1   | \*\*\*\*\*\*\*\*\*\*\*\*\* | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\* | 2024-05-31 | software development |
+| 2   | \*\*\*\*\*\*\*\*\*\*\*     | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*     | 2024-03-31 | java development     |
+| 3   | \*\*\*\*\*\*\*\*\*\*\*\*   | \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*     | 2024-01-26 | java development     |
+
+Custom tokens may used in conjunction with the `mask` method.
+
+```python
+obfuscator = Obfuscator(method="mask", options={"token": "~"})
+```
+
+| id  | name          | contact                   | cohort     | course               |
+| --- | ------------- | ------------------------- | ---------- | -------------------- |
+| 1   | ~~~~~~~~~~~~~ | ~~~~~~~~~~~~~~~~~~~~~~~~~ | 2024-05-31 | software development |
+| 2   | ~~~~~~~~~~~   | ~~~~~~~~~~~~~~~~~~~~~~~   | 2024-03-31 | java development     |
+| 3   | ~~~~~~~~~~~~  | ~~~~~~~~~~~~~~~~~~~~~~~   | 2024-01-26 | java development     |
+
 ### Anonymisation
 
 Anonymisation, or pseudonymisation, replaces PII fields with randomly generated data that is no longer attributable to the specific data subject.
@@ -81,6 +117,22 @@ To use the `anonymise` method, initialise `Obfuscator` with `"anonymise"` as the
 ```python
 obfuscator = Obfuscator(method="anonymise")
 ```
+
+This will obfuscate the data as shown below:
+
+| id  | name          | contact                   | cohort     | course               |
+| --- | ------------- | ------------------------- | ---------- | -------------------- |
+| 1   | Claire Burton | c.burton639@hotmail.co.uk | 2024-05-31 | software development |
+| 2   | June Mistry   | j.mistry354@outlook.com   | 2024-03-31 | java development     |
+| 3   | Hilary Welch  | hilary244@hotmail.co.uk   | 2024-01-26 | java development     |
+
+| id  | name            | contact                | cohort     | course               |
+| --- | --------------- | ---------------------- | ---------- | -------------------- |
+| 1   | Ian McCarthy    | ian460@hotmail.com     | 2024-05-31 | software development |
+| 2   | Kate Stephenson | kate259@outlook.com    | 2024-03-31 | java development     |
+| 3   | Leigh Jones     | l.jones459@yahoo.co.uk | 2024-01-26 | java development     |
+
+The second table might look similar, however, all the PII fields have been replaced with randomly generated data, obscuring the original data subjects.
 
 When anonymising data, `Obfuscator` will attempt to generate meaningful replacements for each PII field. If it is unable to generate a meaningful replacement, `Obfuscator` will tokenise the field instead. Not that a custom token can still be assigned when `method` is set to `"anonymise"`, as shown below:
 
