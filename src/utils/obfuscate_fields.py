@@ -1,5 +1,6 @@
 from .data_generation.generate_pii import generate_pii
 from .obfuscation_methods.anonymise import anonymise
+from .obfuscation_methods.mask import mask
 from exceptions import ObfuscationError
 
 
@@ -60,6 +61,9 @@ def obfuscate_field(field, val, options):
     pii_fields = options["pii_fields"]
     obfuscation_method = options["obfuscation_method"]
     obfuscation_options = options["options"]
+
+    if obfuscation_method == mask:
+        obfuscation_options["_val"] = val
 
     if isinstance(val, list):
         return obfuscate_fields(val, options)

@@ -10,12 +10,14 @@ from utils.get_data import get_data
 from utils.get_file_type import get_file_type
 from utils.obfuscate_fields import obfuscate_fields
 from utils.obfuscation_methods.anonymise import anonymise
+from utils.obfuscation_methods.mask import mask
 from utils.obfuscation_methods.tokenise import tokenise
 
 
 class Obfuscator:
     OBF_METHODS = {
         "tokenise": tokenise,
+        "mask": mask,
         "anonymise": anonymise,
     }
 
