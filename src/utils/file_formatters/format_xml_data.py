@@ -33,6 +33,4 @@ def format_xml_data(data):
 
     xml_str = f"<{root}>\n{''.join(children)}</{root}>"
 
-    print(xml_str)
-
     return xml_str
